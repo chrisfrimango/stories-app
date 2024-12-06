@@ -29,11 +29,9 @@ export const registerSchema = z
 
 // Profile schema
 export const profileSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
+  username: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   bio: z.string().max(160, "Bio must be less than 160 characters"),
-  location: z.string().optional(),
-  website: z.string().url("Invalid URL").optional().or(z.literal("")),
 });
 
 export const postSchema = z.object({
@@ -42,14 +40,20 @@ export const postSchema = z.object({
   category: z.string().min(1, "Category is required"),
 });
 
-export const passwordSchema = z.object({
-  currentPassword: z.string().min(6, "Password must be at least 6 characters"),
-  newPassword: z.string().min(6, "Password must be at least 6 characters"),
-  confirmPassword: z.string().min(6, "Password must be at least 6 characters"),
-}).refine((data) => data.newPassword === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
+export const passwordSchema = z
+  .object({
+    currentPassword: z
+      .string()
+      .min(6, "Password must be at least 6 characters"),
+    newPassword: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z
+      .string()
+      .min(6, "Password must be at least 6 characters"),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 export type PasswordInput = z.infer<typeof passwordSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
