@@ -1,5 +1,14 @@
 # CHANGELOG
 
+#### 2024-12-06 feat: stories functions, add post management, post backend logic, layout and starting cypress
+
+- **Beskrivning**:
+  - Implementerar funktionalitet för stories/posts.
+  - Lägger till hantering av inlägg (skapa, redigera, ta bort).
+  - Implementerar backend-logik för posts med API-endpoints.
+  - Fortsatt arbete med layout och styling.
+  - Påbörjar implementation av Cypress-tester för komponenter
+
 #### 2024-12-05 feat: layout, routes, register wip
 
 - **Beskrivning**:
@@ -48,5 +57,3 @@
   - `.gitignore`
   - `README.md`
   - Initerar Git och gör den första commit:en.
-
-feat: stories functions, add post management, post backend logic, layout and starting cypress
