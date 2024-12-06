@@ -21,7 +21,6 @@
   - Koppling till databasen för validering av användaruppgifter.
   - Implementerar säkerhetshantering, som bcrypt för lösenordshashning.
 
-
 #### 2024-12-03 setup backend structure, dependencies etc
 
 - **Beskrivning**:
@@ -49,3 +48,5 @@
   - `.gitignore`
   - `README.md`
   - Initerar Git och gör den första commit:en.
+
+feat: stories functions, add post management, post backend logic, layout and starting cypress
