@@ -26,7 +26,7 @@ export const Error: React.FC<ErrorProps> = ({
   message = "Something went wrong",
 }) => {
   return (
-    <ErrorContainer>
+    <ErrorContainer data-testid="error-message">
       <ErrorIcon>⚠️</ErrorIcon>
       <ErrorMessage>{message}</ErrorMessage>
     </ErrorContainer>

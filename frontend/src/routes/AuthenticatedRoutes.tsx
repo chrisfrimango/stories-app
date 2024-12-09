@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { Loading } from "../ui/Loading";
 
 const Blog = React.lazy(() => import("../pages/Blog"));
+const Profile = React.lazy(() => import("../pages/Profile"));
 const PostDetail = React.lazy(() => import("../pages/PostDetail"));
 
 export function AuthenticatedRoutes() {

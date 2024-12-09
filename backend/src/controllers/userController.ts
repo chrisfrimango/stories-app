@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   LoginRequest,
   RegisterRequest,
+  UpdateProfileRequest,
 } from "../types/requests";
 import { User } from "../types/entities";
 import { AuthResponse, ErrorResponse } from "../types/responses";
@@ -95,6 +96,7 @@ export const registerController = async (
 
     const { email, password, username } = validated.data;
 
+    // Check if user already exists
     const existingUser = await query<User>({
       text: "SELECT * FROM users WHERE email = $1",
       params: [email],
@@ -105,10 +107,10 @@ export const registerController = async (
       return;
     }
 
-
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-
+    // Create new user
     const result = await query<User>({
       text: `INSERT INTO users (email, password, username)
        VALUES ($1, $2, $3)
@@ -132,5 +134,75 @@ export const registerController = async (
     });
   } catch (error) {
     res.status(500).json({ message: "Registration failed" });
+  }
+};
+
+export const getProfileController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const userId = (req as AuthenticatedRequest).user.userId;
+    console.log("detta är .user.userId", userId);
+    const { id } = req.params;
+    console.log("detta är id", id);
+    const result = await query<User>({
+      text: "SELECT id, email, username, avatar, bio, created_at FROM users WHERE id = $1",
+      params: [userId],
+    });
+
+    const user = result.rows[0];
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch profile" });
+  }
+};
+
+export const updateProfileController = async (
+  req: Request<{}, {}, UpdateProfileRequest>,
+  res: Response
+): Promise<void> => {
+  try {
+    const userId = (req as AuthenticatedRequest).user.userId;
+    const { username, bio, avatar } = req.body;
+
+    const result = await query<User>({
+      text: `UPDATE users
+       SET username = $1, bio = $2, avatar = $3
+       WHERE id = $4
+       RETURNING id, email, username, avatar, bio`,
+      params: [username, bio, avatar, userId],
+    });
+
+    const user = result.rows[0];
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update profile" });
+  }
+};
+
+export const deleteProfileController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const userId = (req as AuthenticatedRequest).user.userId;
+    await query<User>({
+      text: "DELETE FROM users WHERE id = $1",
+      params: [userId],
+    });
+    res.status(204).send({ message: "Profile deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete profile" });
   }
 };

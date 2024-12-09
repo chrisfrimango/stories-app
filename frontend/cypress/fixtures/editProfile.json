@@ -1,0 +1,16 @@
+{
+  "currentProfile": {
+    "id": "1",
+    "username": "testuser",
+    "email": "test@example.com",
+    "bio": "Original bio",
+    "created_at": "2024-03-20T10:00:00Z"
+  },
+  "updatedProfile": {
+    "id": "1",
+    "username": "updateduser",
+    "email": "updated@example.com",
+    "bio": "Updated bio",
+    "created_at": "2024-03-20T10:00:00Z"
+  }
+}

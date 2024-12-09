@@ -118,9 +118,7 @@ const Login: React.FC = () => {
       });
     } catch (error) {
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "An unexpected error occurred during login";
+        error instanceof Error ? error.message : "Invalid credentials";
 
       setError("root", {
         type: "submit",
@@ -142,20 +140,38 @@ const Login: React.FC = () => {
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormGroup>
             <Label>Email</Label>
-            <Input {...register("email")} type="email" />
+            <Input
+              {...register("email")}
+              type="email"
+              data-testid="email-input"
+            />
             {errors.email && (
-              <ErrorMessage>{errors.email.message}</ErrorMessage>
+              <ErrorMessage data-testid="email-error">
+                {errors.email.message}
+              </ErrorMessage>
             )}
           </FormGroup>
           <FormGroup>
             <Label>Password</Label>
-            <Input {...register("password")} type="password" />
+            <Input
+              {...register("password")}
+              type="password"
+              data-testid="password-input"
+            />
             {errors.password && (
-              <ErrorMessage>{errors.password.message}</ErrorMessage>
+              <ErrorMessage data-testid="password-error">
+                {errors.password.message}
+              </ErrorMessage>
             )}
           </FormGroup>
-          {errors.root && <ErrorMessage>{errors.root.message}</ErrorMessage>}
-          <SubmitButton type="submit">Sign In</SubmitButton>
+          {errors.root && (
+            <ErrorMessage data-testid="root-error">
+              {errors.root.message}
+            </ErrorMessage>
+          )}
+          <SubmitButton type="submit" data-testid="login-button">
+            Sign In
+          </SubmitButton>
         </Form>
       </LoginCard>
     </LoginContainer>

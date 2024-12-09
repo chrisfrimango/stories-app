@@ -1,0 +1,18 @@
+{
+  "mockUser": {
+    "id": 1,
+    "username": "testuser",
+    "email": "test@example.com",
+    "password": "Password123!",
+    "created_at": "2024-03-20T10:00:00Z",
+    "updated_at": "2024-03-20T10:00:00Z"
+  },
+  "mockLoginResponse": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.mockToken",
+    "user": {
+      "id": 1,
+      "username": "testuser",
+      "email": "test@example.com"
+    }
+  }
+}

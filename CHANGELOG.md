@@ -1,5 +1,17 @@
 # CHANGELOG
 
+#### 2024-12-09 feat: user and category management, Cypress tests, UI enhancements
+
+- **Beskrivning**:
+  - Utökar användarhantering med nya funktioner
+  - Lägger till hantering av kategorier med nya controllers och routes.
+  - Förbättrar layout och navigering i frontend,
+  - Implementerar nya Cypress-tester
+  - Lägger till nya typer
+  - Förbättrar fel- och laddningshantering i UI-komponenter.
+  - Skapat alert context
+  - Skapat en hook för profilhantering.
+
 #### 2024-12-06 feat: stories functions, add post management, post backend logic, layout and starting cypress
 
 - **Beskrivning**:

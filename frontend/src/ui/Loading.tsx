@@ -31,7 +31,7 @@ const Spinner = styled.div`
 
 export const Loading: React.FC<LoadingProps> = ({ message = "Loading..." }) => {
   return (
-    <LoadingContainer>
+    <LoadingContainer data-testid="loading">
       <Spinner />
       <span>{message}</span>
     </LoadingContainer>

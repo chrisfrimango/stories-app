@@ -6,6 +6,7 @@ const {
   createEsbuildPlugin,
 } = require("@badeball/cypress-cucumber-preprocessor/esbuild");
 const { defineConfig } = require("cypress");
+const coverage = require("@cypress/code-coverage/task");
 
 module.exports = defineConfig({
   e2e: {
@@ -17,6 +18,7 @@ module.exports = defineConfig({
       on("file:preprocessor", bundler);
 
       await addCucumberPreprocessorPlugin(on, config);
+      coverage(on, config);
 
       return config;
     },
@@ -29,17 +31,20 @@ module.exports = defineConfig({
   },
   env: {
     API_URL: "http://localhost:3000/api",
+    codeCoverage: {
+      exclude: ["cypress/**/*.*", "src/main.tsx", "src/vite-env.d.ts"],
+    },
+    typescript: true,
   },
   component: {
     devServer: {
       framework: "react",
       bundler: "vite",
-      // Lägg till denna konfiguration
-      webpackConfig: {
-        resolve: {
-          extensions: [".ts", ".tsx", ".js", ".jsx"],
-        },
-      },
+    },
+    supportFile: "cypress/support/component.tsx",
+    setupNodeEvents(on, config) {
+      coverage(on, config);
+      return config;
     },
   },
 });

@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import { styled } from "styled-components";
 import { Outlet } from "react-router-dom";
 import NavBar from "../nav/NavBar";
+import { AlertProvider } from "../../context/alertContext";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -36,17 +37,19 @@ const FooterWrapper = styled.div`
 const Layout: React.FC = () => {
   return (
     <LayoutContainer>
-      <HeaderWrapper>
-        <Header>
-          <NavBar onCreatePost={() => openCreatePostModal()} />
-        </Header>
-      </HeaderWrapper>
-      <Main>
-        <Outlet />
-      </Main>
-      <FooterWrapper>
-        <Footer />
-      </FooterWrapper>
+      <AlertProvider>
+        <HeaderWrapper>
+          <Header>
+            <NavBar onCreatePost={() => openCreatePostModal()} />
+          </Header>
+        </HeaderWrapper>
+        <Main>
+          <Outlet />
+        </Main>
+        <FooterWrapper>
+          <Footer />
+        </FooterWrapper>
+      </AlertProvider>
     </LayoutContainer>
   );
 };

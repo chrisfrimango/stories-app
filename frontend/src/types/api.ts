@@ -19,14 +19,3 @@ export interface Post {
   username: string;
   category_name?: string;
 }
-
-// export interface ApiResponse<T> {
-//   data?: T;
-//   error?: string;
-// }
-
-// export interface Author {
-//   id: string;
-//   name: string;
-//   avatarUrl: string;
-// }
