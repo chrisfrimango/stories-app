@@ -1,5 +1,13 @@
 # CHANGELOG
 
+#### 2024-12-10 feat: profile management, password change, and cypress test improvements
+
+- **Beskrivning**:
+  - Implementerar lösenordsändring
+  - Omstrukturerar Cypress-tester och lägger till för profilhantering och lösenordsändring
+  - Skapar ny modal context för bättre UI-hantering
+  - Förbättrar layout-komponenten
+
 #### 2024-12-09 feat: user and category management, Cypress tests, UI enhancements
 
 - **Beskrivning**:

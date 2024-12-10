@@ -1,55 +1,20 @@
-// Behåll eventuella andra existerande commands här
-// ***********************************************
-// This example commands.ts shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-//
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
-
 /// <reference types="cypress" />
 
 export {};
 
 declare global {
   namespace Cypress {
-    interface Chainable<Subject = any> {
+    interface Chainable {
       login(email: string, password: string): Chainable<void>;
       createPost(
         title: string,
         content: string,
         category?: string
       ): Chainable<void>;
-      mockAuthState(user?: Record<string, any>): Chainable<void>;
+      mockAuthState(user?: User): Chainable<void>;
+      setupMockProfile(): Chainable<void>;
+      editMockProfile(): Chainable<void>;
+      mockAuthUser(): Chainable<void>;
     }
   }
 }
@@ -82,5 +47,69 @@ Cypress.Commands.add("mockAuthState", (user = null) => {
   cy.window().then((win) => {
     win.localStorage.setItem("auth_token", "fake-token");
     win.localStorage.setItem("user", JSON.stringify(user || defaultUser));
+  });
+});
+
+Cypress.Commands.add("setupMockProfile", () => {
+  cy.fixture("profile.json").then((profileData) => {
+    // Mock auth context
+    cy.window().then((win) => {
+      win.localStorage.setItem("auth_token", "fake-token");
+      win.localStorage.setItem(
+        "user_data",
+        JSON.stringify({
+          id: profileData.id,
+          username: profileData.username,
+          email: profileData.email,
+        })
+      );
+    });
+
+    // Mock profile API call
+    cy.intercept("GET", "**/api/profile/*", {
+      statusCode: 200,
+      body: profileData,
+    }).as("getProfile");
+  });
+});
+
+Cypress.Commands.add("editMockProfile", () => {
+  cy.fixture("editProfile.json").then((profileData) => {
+    cy.window().then((win) => {
+      win.localStorage.setItem("auth_token", "fake-token");
+      win.localStorage.setItem(
+        "user_data",
+        JSON.stringify({
+          id: profileData.currentProfile.id,
+          username: profileData.currentProfile.username,
+          email: profileData.currentProfile.email,
+        })
+      );
+    });
+
+    cy.intercept(
+      "GET",
+      `${Cypress.env("API_URL")}/api/profile/${
+        profileData.currentProfile.idno
+      }`,
+      {
+        statusCode: 200,
+        body: profileData.currentProfile,
+      }
+    ).as("getProfile");
+  });
+});
+
+Cypress.Commands.add("mockAuthUser", () => {
+  cy.window().then((win) => {
+    win.localStorage.setItem("auth_token", "fake-token");
+    win.localStorage.setItem(
+      "user_data",
+      JSON.stringify({
+        id: "1",
+        username: "testuser",
+        email: "test@example.com",
+      })
+    );
   });
 });

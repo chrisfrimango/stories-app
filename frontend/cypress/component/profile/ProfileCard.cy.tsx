@@ -2,30 +2,9 @@
 import ProfileCard from "../../../src/components/profile/ProfileCard";
 
 describe("ProfileCard Component", () => {
-  const setupMockProfile = () => {
-    cy.fixture("profile.json").then((profileData) => {
-      // Mock auth context
-      cy.window().then((win) => {
-        win.localStorage.setItem("auth_token", "fake-token");
-        win.localStorage.setItem(
-          "user_data",
-          JSON.stringify({
-            id: profileData.id,
-            username: profileData.username,
-            email: profileData.email,
-          })
-        );
-      });
-
-      // Mock profile API call
-      cy.intercept("GET", "**/api/profile/*", {
-        statusCode: 200,
-        body: profileData,
-      }).as("getProfile");
-    });
-  };
-
-  beforeEach(setupMockProfile);
+  beforeEach(() => {
+    cy.setupMockProfile();
+  });
 
   it("displays profile information correctly", () => {
     cy.mount(<ProfileCard />);
@@ -53,6 +32,8 @@ describe("ProfileCard Component", () => {
     cy.get('[data-testid="loading"]').should("exist");
     cy.contains("Loading...").should("be.visible");
     cy.wait("@getProfileDelayed");
+    cy.get('[data-testid="loading"]').should("not.exist");
+    cy.get('[data-testid="profile-username"]').should("contain", "testuser");
   });
 
   it("handles error state", () => {

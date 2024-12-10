@@ -1,8 +1,9 @@
-import { Request, Response } from "express";
+import { Request, Response, RequestHandler } from "express";
 import {
   LoginRequest,
   RegisterRequest,
   UpdateProfileRequest,
+  ChangePasswordRequest,
 } from "../types/requests";
 import { User } from "../types/entities";
 import { AuthResponse, ErrorResponse } from "../types/responses";
@@ -10,7 +11,11 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { query } from "../utils/db";
 import { AuthenticatedRequest } from "../types/express";
-import { loginSchema, registerSchema } from "../validation/schema";
+import {
+  loginSchema,
+  registerSchema,
+  changePasswordSchema,
+} from "../validation/schema";
 
 export const loginController = async (
   req: Request<{}, {}, LoginRequest>,
@@ -204,5 +209,60 @@ export const deleteProfileController = async (
     res.status(204).send({ message: "Profile deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Failed to delete profile" });
+  }
+};
+
+export const changePasswordController = async (
+  req: Request<{ id: string }, {}, ChangePasswordRequest>,
+  res: Response
+): Promise<void> => {
+  try {
+    const userId = req.user?.userId;
+    const validation = changePasswordSchema.safeParse(req.body);
+
+    if (!validation.success) {
+      res.status(400).json({
+        message: validation.error.errors[0].message,
+      });
+      return;
+    }
+
+    const { currentPassword, newPassword } = validation.data;
+
+    // Get current user's password hash
+    const result = await query<User>({
+      text: "SELECT password FROM users WHERE id = $1",
+      params: [userId],
+    });
+
+    if (!result.rows[0]) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    // Verify current password
+    const isCurrentPasswordValid = await bcrypt.compare(
+      currentPassword,
+      result.rows[0].password
+    );
+
+    if (!isCurrentPasswordValid) {
+      res.status(401).json({ message: "Current password is incorrect" });
+      return;
+    }
+
+    // Hash new password
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update password
+    await query({
+      text: "UPDATE users SET password = $1 WHERE id = $2",
+      params: [hashedNewPassword, userId],
+    });
+
+    res.json({ message: "Password updated successfully" });
+  } catch (error) {
+    console.error("Password change error:", error);
+    res.status(500).json({ message: "Failed to change password" });
   }
 };

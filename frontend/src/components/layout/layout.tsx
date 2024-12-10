@@ -3,8 +3,13 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { styled } from "styled-components";
 import { Outlet } from "react-router-dom";
-import NavBar from "../nav/NavBar";
+import NavBar from "../navbar/Navbar";
+import CreatePostModal from "../post/CreatePost";
 import { AlertProvider } from "../../context/alertContext";
+import EditPostModal from "../post/EditPost";
+import { useModal } from "../../context/modalContext";
+// import EditProfile from "../profile/EditProfile";
+// import ChangePassword from "../profile/ChangePassword";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -35,6 +40,17 @@ const FooterWrapper = styled.div`
   margin-top: auto;
 `;
 const Layout: React.FC = () => {
+  const {
+    isCreatePostModalOpen,
+    isEditPostModalOpen,
+    closeCreatePostModal,
+    closeEditPostModal,
+    openCreatePostModal,
+    // isEditProfileModalOpen,
+    // closeEditProfileModal,
+    // isChangePasswordModalOpen,
+    // closeChangePasswordModal,
+  } = useModal();
   return (
     <LayoutContainer>
       <AlertProvider>
@@ -49,6 +65,22 @@ const Layout: React.FC = () => {
         <FooterWrapper>
           <Footer />
         </FooterWrapper>
+        <CreatePostModal
+          isOpen={isCreatePostModalOpen}
+          onClose={() => closeCreatePostModal()}
+        />
+        <EditPostModal
+          isOpen={isEditPostModalOpen}
+          onClose={() => closeEditPostModal()}
+        />
+        {/* <EditProfile
+          isOpen={isEditProfileModalOpen}
+          onClose={closeEditProfileModal}
+        />
+        <ChangePassword
+          isOpen={isChangePasswordModalOpen}
+          onClose={closeChangePasswordModal}
+        /> */}
       </AlertProvider>
     </LayoutContainer>
   );

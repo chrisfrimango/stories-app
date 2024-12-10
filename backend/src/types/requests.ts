@@ -24,3 +24,9 @@ export interface UpdateProfileRequest {
   bio?: string;
   avatar?: string;
 }
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
