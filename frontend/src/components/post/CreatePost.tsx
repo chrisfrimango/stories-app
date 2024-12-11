@@ -144,6 +144,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
     try {
       const response = await createPost.mutateAsync(data);
       showAlert("Post created successfully!", "success");
+      reset();
       setTimeout(() => {
         onClose();
         // Hantera navigation här istället
@@ -163,8 +164,14 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<PostFormData>({
     resolver: zodResolver(postSchema),
+    defaultValues: {
+      title: "",
+      content: "",
+      category: "",
+    },
   });
 
   if (!isOpen) return null;

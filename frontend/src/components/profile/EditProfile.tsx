@@ -2,11 +2,12 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PostFormData, postSchema } from "../../validation/schema";
-import { EditPostModalProps } from "../../types/postsTypes";
-import { useAlert } from "../../context/alertContext";
-import { useEditPost, useCategories } from "../../hooks/usePost";
 import { useModal } from "../../context/modalContext";
+import { useUpdateProfile } from "../../hooks/useProfile";
+import { useAlert } from "../../context/alertContext";
+import { ProfileInput, profileSchema } from "../../validation/schema";
+import { Error } from "../../ui/Error";
+import { EditProfileModalProps } from "../../types/userTypes";
 
 const Overlay = styled.div`
   position: fixed;
@@ -49,6 +50,11 @@ const FormGroup = styled.div`
   gap: 0.5rem;
 `;
 
+const Label = styled.label`
+  color: ${({ theme }) => theme.colors.text};
+  font-weight: 500;
+`;
+
 const Input = styled.input`
   padding: 0.75rem;
   border-radius: 6px;
@@ -77,24 +83,11 @@ const TextArea = styled.textarea`
   }
 `;
 
-const Select = styled.select`
-  padding: 0.75rem;
-  border-radius: 6px;
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  background: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.text};
-  width: 100%;
-
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.primary};
-  }
-`;
-
 const ButtonGroup = styled.div`
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
+  margin-top: 1rem;
 `;
 
 const Button = styled.button`
@@ -108,6 +101,11 @@ const Button = styled.button`
   &:hover {
     opacity: 0.9;
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `;
 
 const CancelButton = styled(Button)`
@@ -120,87 +118,114 @@ const SubmitButton = styled(Button)`
   color: white;
 `;
 
-const EditPostModal: React.FC<EditPostModalProps> = ({ isOpen, onClose }) => {
-  const { editingPost } = useModal();
-  console.log(editingPost);
+const EditProfile: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) => {
+  const { editingProfile } = useModal();
+  console.log(editingProfile);
   const { showAlert } = useAlert();
-  const editPost = useEditPost(editingPost?.id?.toString() ?? "");
-  const { data: categories } = useCategories();
+  const updateProfile = useUpdateProfile(editingProfile?.id?.toString() ?? "");
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<PostFormData>({
-    resolver: zodResolver(postSchema),
+  } = useForm<ProfileInput>({
+    resolver: zodResolver(profileSchema),
     defaultValues: {
-      title: "",
-      content: "",
-      category: "",
+      username: "",
+      bio: "",
+      email: "",
     },
   });
 
   useEffect(() => {
-    if (editingPost) {
+    if (editingProfile) {
       reset({
-        title: editingPost.title || "",
-        content: editingPost.content || "",
-        category: editingPost.category_id?.toString() || "",
+        username: editingProfile.username,
+        bio: editingProfile.bio,
+        email: editingProfile.email,
       });
     }
-  }, [editingPost, reset]);
+  }, [editingProfile, reset]);
 
-  const onSubmit = (data: PostFormData) => {
-    editPost.mutate(data, {
+  const onSubmit = (data: ProfileInput) => {
+    console.log(data);
+    updateProfile.mutate(data, {
       onSuccess: () => {
-        showAlert("Post edited successfully", "success");
+        showAlert("Profile updated successfully!", "success");
         onClose();
         reset();
       },
-      onError: () => {
-        showAlert("Failed to edit post", "error");
+      onError: (error) => {
+        console.error("Error updating profile:", error);
+        showAlert("Failed to update profile", "error");
       },
     });
   };
 
   if (!isOpen) return null;
-
   return (
     <Overlay onClick={onClose}>
-      <Modal onClick={(e) => e.stopPropagation()}>
-        <Title>Edit Post</Title>
+      <Modal
+        data-testid="edit-profile-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Title>Edit Profile</Title>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormGroup>
-            <Input {...register("title")} />
-            {errors.title && <span>{errors.title.message}</span>}
+            <Label>Name</Label>
+            <Input
+              data-testid="edit-profile-name"
+              {...register("username")}
+              placeholder="Your name"
+            />
+            {errors.username && (
+              <Error
+                data-testid="error-message"
+                message={errors.username.message}
+              />
+            )}
           </FormGroup>
 
           <FormGroup>
-            <TextArea {...register("content")} />
-            {errors.content && <span>{errors.content.message}</span>}
+            <Label>Bio</Label>
+            <TextArea
+              data-testid="edit-profile-bio"
+              {...register("bio")}
+              rows={4}
+              placeholder="Tell us about yourself"
+            />
+            {errors.bio && (
+              <Error data-testid="error-message" message={errors.bio.message} />
+            )}
           </FormGroup>
 
           <FormGroup>
-            <Select {...register("category")}>
-              <option value="" disabled>
-                Select a category
-              </option>
-              {categories?.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </Select>
-            {errors.category && <span>{errors.category.message}</span>}
+            <Label>Email</Label>
+            <Input
+              data-testid="edit-profile-email"
+              {...register("email")}
+              type="email"
+              placeholder="your.email@example.com"
+            />
+            {errors.email && (
+              <Error
+                data-testid="error-message"
+                message={errors.email.message}
+              />
+            )}
           </FormGroup>
 
           <ButtonGroup>
-            <CancelButton type="button" onClick={onClose}>
+            <CancelButton
+              data-testid="edit-profile-cancel"
+              type="button"
+              onClick={onClose}
+            >
               Cancel
             </CancelButton>
-            <SubmitButton type="submit" disabled={editPost.isLoading}>
-              {editPost.isLoading ? "Editing..." : "Edit Post"}
+            <SubmitButton data-testid="edit-profile-submit" type="submit">
+              {updateProfile.isLoading ? "Saving..." : "Save Changes"}
             </SubmitButton>
           </ButtonGroup>
         </Form>
@@ -209,4 +234,4 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ isOpen, onClose }) => {
   );
 };
 
-export default EditPostModal;
+export default EditProfile;

@@ -2,7 +2,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../services/authService";
 import { PasswordInput, ProfileInput } from "../validation/schema";
 import { UserProfile } from "../types/userTypes";
-
 export const profileApi = {
   fetchProfile: async (id: string) => {
     const { data } = await api.get<UserProfile>(`/profile/${id}`);
@@ -13,6 +12,9 @@ export const profileApi = {
   },
   changePassword: async (id: string, data: PasswordInput) => {
     await api.put(`/profile/${id}/change-password`, data);
+  },
+  deleteProfile: async (id: string) => {
+    await api.delete(`/profile/${id}`);
   },
 };
 
@@ -27,8 +29,12 @@ export function useUpdateProfile(id: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: ProfileInput) => profileApi.updateProfile(id, data),
-    onSuccess: () => {
+    onSuccess: (response) => {
+      // Invalidate both profile queries
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["profile", id] });
+      // Update auth user data if needed
+      queryClient.setQueryData(["profile", id], response);
       return "Profile updated successfully";
     },
     onError: (error) => {
@@ -45,6 +51,22 @@ export function useChangePassword(id: string) {
     },
     onError: (error) => {
       console.error("Error changing password:", error);
+    },
+  });
+}
+
+export function useDeleteProfile(id: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => profileApi.deleteProfile(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["profile", id] });
+      return "Profile deleted successfully";
+    },
+    onError: (error) => {
+      console.error("Error deleting profile:", error);
+      throw error;
     },
   });
 }

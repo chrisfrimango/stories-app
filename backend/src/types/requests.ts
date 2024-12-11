@@ -22,7 +22,7 @@ export interface UpdatePostRequest {
 export interface UpdateProfileRequest {
   username?: string;
   bio?: string;
-  avatar?: string;
+  email?: string;
 }
 
 export interface ChangePasswordRequest {

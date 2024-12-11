@@ -8,8 +8,8 @@ import CreatePostModal from "../post/CreatePost";
 import { AlertProvider } from "../../context/alertContext";
 import EditPostModal from "../post/EditPost";
 import { useModal } from "../../context/modalContext";
-// import EditProfile from "../profile/EditProfile";
-// import ChangePassword from "../profile/ChangePassword";
+import EditProfile from "../profile/EditProfile";
+import ChangePassword from "../profile/ChangePassword";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -46,10 +46,10 @@ const Layout: React.FC = () => {
     closeCreatePostModal,
     closeEditPostModal,
     openCreatePostModal,
-    // isEditProfileModalOpen,
-    // closeEditProfileModal,
-    // isChangePasswordModalOpen,
-    // closeChangePasswordModal,
+    isEditProfileModalOpen,
+    closeEditProfileModal,
+    isChangePasswordModalOpen,
+    closeChangePasswordModal,
   } = useModal();
   return (
     <LayoutContainer>
@@ -73,14 +73,14 @@ const Layout: React.FC = () => {
           isOpen={isEditPostModalOpen}
           onClose={() => closeEditPostModal()}
         />
-        {/* <EditProfile
+        <EditProfile
           isOpen={isEditProfileModalOpen}
           onClose={closeEditProfileModal}
         />
         <ChangePassword
           isOpen={isChangePasswordModalOpen}
           onClose={closeChangePasswordModal}
-        /> */}
+        />
       </AlertProvider>
     </LayoutContainer>
   );

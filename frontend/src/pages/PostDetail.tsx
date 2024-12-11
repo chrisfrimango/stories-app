@@ -9,37 +9,26 @@ import {
   CardActions,
   Button,
 } from "@mui/material";
-import { useDeletePost, usePost } from "../hooks/usePost";
+import { usePost, useHandlePostDelete } from "../hooks/usePost";
 import { Loading } from "../ui/Loading";
 import { Error } from "../ui/Error";
 import { useAuth } from "../context/authContext";
-// alert modal context
+import { useModal } from "../context/modalContext";
 
 const PostDetail: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { data: post, error, isLoading } = usePost(id!);
-  const deletePost = useDeletePost(id!);
-
+  const { openEditPostModal } = useModal();
+  const { handleDelete, isDeleting } = useHandlePostDelete({
+    postId: id!,
+    redirectTo: "/blog",
+  });
 
   if (isLoading) return <Loading message="Loading post..." />;
   if (error) return <Error message="Failed to load post" />;
   if (!post) return <Error message="Post not found" />;
-
-  const handleDelete = () => {
-    if (window.confirm("Are you sure you want to delete this post?")) {
-      deletePost.mutate(undefined, {
-        onSuccess: () => {
-          showAlert("Post deleted successfully", "success");
-          navigate("/blog");
-        },
-        onError: () => {
-          showAlert("Error deleting post", "error");
-        },
-      });
-    }
-  };
 
   return (
     <Container
@@ -86,6 +75,7 @@ const PostDetail: React.FC = () => {
             <Typography variant="subtitle1">
               {new Date(post.created_at).toLocaleDateString()}
             </Typography>
+            <Typography variant="subtitle1">{post.category_name}</Typography>
           </Box>
           <Divider />
         </Box>
@@ -117,6 +107,7 @@ const PostDetail: React.FC = () => {
                 variant="contained"
                 size="small"
                 onClick={handleDelete}
+                disabled={isDeleting}
               >
                 Delete
               </Button>

@@ -3,7 +3,24 @@ import ProfileCard from "../../../src/components/profile/ProfileCard";
 
 describe("ProfileCard Component", () => {
   beforeEach(() => {
-    cy.setupMockProfile();
+    cy.fixture("profile.json").then((profileData) => {
+      cy.window().then((win) => {
+        win.localStorage.setItem("auth_token", "fake-token");
+        win.localStorage.setItem(
+          "user_data",
+          JSON.stringify({
+            id: profileData.id,
+            username: profileData.username,
+            email: profileData.email,
+          })
+        );
+      });
+
+      cy.intercept("GET", "**/api/profile/*", {
+        statusCode: 200,
+        body: profileData,
+      }).as("getProfile");
+    });
   });
 
   it("displays profile information correctly", () => {

@@ -2,7 +2,6 @@ import { Request, Response, RequestHandler } from "express";
 import {
   LoginRequest,
   RegisterRequest,
-  UpdateProfileRequest,
   ChangePasswordRequest,
 } from "../types/requests";
 import { User } from "../types/entities";
@@ -169,19 +168,19 @@ export const getProfileController = async (
 };
 
 export const updateProfileController = async (
-  req: Request<{}, {}, UpdateProfileRequest>,
-  res: Response
+  req: Request,
+  res: Response<{ user: User } | ErrorResponse>
 ): Promise<void> => {
   try {
     const userId = (req as AuthenticatedRequest).user.userId;
-    const { username, bio, avatar } = req.body;
+    const { username, email, bio } = req.body;
 
     const result = await query<User>({
       text: `UPDATE users
-       SET username = $1, bio = $2, avatar = $3
+       SET username = $1, email = $2, bio = $3
        WHERE id = $4
-       RETURNING id, email, username, avatar, bio`,
-      params: [username, bio, avatar, userId],
+       RETURNING id, email, username, bio`,
+      params: [username, email, bio, userId],
     });
 
     const user = result.rows[0];
@@ -190,7 +189,7 @@ export const updateProfileController = async (
       return;
     }
 
-    res.json(user);
+    res.json({ user });
   } catch (error) {
     res.status(500).json({ message: "Failed to update profile" });
   }

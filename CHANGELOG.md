@@ -1,5 +1,13 @@
 # CHANGELOG
 
+### 2024-12-11 feat: profile and post enhancements, Cypress test updates
+
+- **Beskrivning**:
+  - Förbättrar användarhantering och uppdaterar typer
+  - Uppdaterar Cypress-komponenttester och lägger till nytt Cypress-test för `DeleteProfile`
+  - Förbättrar layout-komponenten för bättre UI-hantering och responsivitet.
+  - Allmäna uppdateringar
+
 #### 2024-12-10 feat: profile management, password change, and cypress test improvements
 
 - **Beskrivning**:

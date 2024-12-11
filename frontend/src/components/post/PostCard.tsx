@@ -9,9 +9,9 @@ import { Button, CardActionArea } from "@mui/material";
 import { useAuth } from "../../context/authContext";
 import { PostCardProps } from "../../types/postsTypes";
 import { theme } from "../../styles/theme";
-import { useDeletePost } from "../../hooks/usePost";
-import { useAlert } from "../../context/alertContext";
+import { useHandlePostDelete } from "../../hooks/usePost";
 import { useModal } from "../../context/modalContext";
+
 const StyledCard = styled(Card)({
   height: "100%",
   display: "flex",
@@ -42,11 +42,12 @@ const MetaContainer = styled("div")(({ theme }) => ({
 }));
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
-  const { showAlert } = useAlert();
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
-  const deletePost = useDeletePost(post.id.toString());
   const { openEditPostModal } = useModal();
+  const { handleDelete, isDeleting } = useHandlePostDelete({
+    postId: post.id.toString(),
+  });
 
   const handleClick = () => {
     if (isAuthenticated && user?.username) {
@@ -63,19 +64,6 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     }
   };
 
-  const handleDelete = () => {
-    if (window.confirm("Are you sure you want to delete this post?")) {
-      deletePost.mutate(undefined, {
-        onSuccess: () => {
-          showAlert("Post deleted successfully", "success");
-        },
-        onError: () => {
-          showAlert("Error deleting post", "error");
-        },
-      });
-    }
-  };
-
   return (
     <StyledCard>
       <StyledCardActionArea onClick={handleClick}>
@@ -89,7 +77,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
               : post.content}
           </Typography>
           <MetaContainer>
-            <Typography variant="body2">By {post.username}</Typography>
+            <Typography variant="body2">By {user?.username}</Typography>
             <Typography variant="body2">
               {new Date(post.created_at).toLocaleDateString()}
             </Typography>
@@ -98,7 +86,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         </CardContent>
       </StyledCardActionArea>
       <CardActions sx={{ justifyContent: "flex-end" }}>
-        {isAuthenticated && user?.username === post.username && (
+        {isAuthenticated && Number(user?.id) === post.user_id && (
           <>
             <Button
               variant="contained"
@@ -112,6 +100,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
               variant="contained"
               size="small"
               onClick={handleDelete}
+              disabled={isDeleting}
             >
               Delete
             </Button>

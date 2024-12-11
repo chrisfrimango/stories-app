@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 import { authService } from "../services/authService";
+import { useQueryClient } from "@tanstack/react-query";
+
 interface UserSession {
   id: string;
   email: string;
@@ -27,6 +29,7 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const queryClient = useQueryClient();
   const [isAuthenticated, setIsAuthenticated] = useState(
     authService.isAuthenticated()
   );
@@ -49,6 +52,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = () => {
     localStorage.removeItem("auth_token");
     localStorage.removeItem("user_data");
+    queryClient.clear();
     setUser(null);
     setIsAuthenticated(false);
   };

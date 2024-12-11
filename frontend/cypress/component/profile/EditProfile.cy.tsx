@@ -1,11 +1,34 @@
 /// <reference types="cypress" />
 import EditProfile from "../../../src/components/profile/EditProfile";
-import ProfileCard from "../../../src/components/profile/ProfileCard";
 import { createOnCloseSpy } from "../../support/utils";
 
 describe("EditProfile Modal", () => {
   beforeEach(() => {
-    cy.editMockProfile();
+    // Directly implement profile mocking instead of using command
+    cy.fixture("editProfile.json").then((profileData) => {
+      cy.window().then((win) => {
+        win.localStorage.setItem("auth_token", "fake-token");
+        win.localStorage.setItem(
+          "user_data",
+          JSON.stringify({
+            id: profileData.currentProfile.id,
+            username: profileData.currentProfile.username,
+            email: profileData.currentProfile.email,
+          })
+        );
+      });
+
+      cy.intercept(
+        "GET",
+        `${Cypress.env("API_URL")}/api/profile/${
+          profileData.currentProfile.idno
+        }`,
+        {
+          statusCode: 200,
+          body: profileData.currentProfile,
+        }
+      ).as("getProfile");
+    });
   });
 
   it("renders modal content when open", () => {
@@ -13,12 +36,18 @@ describe("EditProfile Modal", () => {
     cy.wait("@getProfile");
 
     cy.get('[data-testid="edit-profile-modal"]').should("be.visible");
-    cy.get('[data-testid="edit-profile-name"]').should("have.value", "testuser");
+    cy.get('[data-testid="edit-profile-name"]').should(
+      "have.value",
+      "testuser"
+    );
     cy.get('[data-testid="edit-profile-email"]').should(
       "have.value",
       "test@example.com"
     );
-    cy.get('[data-testid="edit-profile-bio"]').should("have.value", "Original bio");
+    cy.get('[data-testid="edit-profile-bio"]').should(
+      "have.value",
+      "Original bio"
+    );
   });
 
   it("validates required fields", () => {

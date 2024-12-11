@@ -3,6 +3,8 @@ import { PostsResponse, Post, CategoriesResponse } from "../types/postsTypes";
 import { api } from "../services/authService";
 import { PostFormData } from "../validation/schema";
 import { UserProfile } from "../types/userTypes";
+import { useAlert } from "../context/alertContext";
+import { useNavigate } from "react-router-dom";
 
 export const postApi = {
   fetchAll: async () => {
@@ -111,4 +113,39 @@ export function useProfile(id: string) {
     queryKey: ["profile", id],
     queryFn: () => profileApi.fetchProfile(id),
   });
+}
+
+export interface UseHandlePostDeleteOptions {
+  postId: string;
+  onSuccess?: () => void;
+  redirectTo?: string;
+}
+
+export function useHandlePostDelete({
+  postId,
+  onSuccess,
+  redirectTo,
+}: UseHandlePostDeleteOptions) {
+  const { showAlert } = useAlert();
+  const deletePost = useDeletePost(postId);
+  const navigate = useNavigate();
+
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      deletePost.mutate(undefined, {
+        onSuccess: () => {
+          showAlert("Post deleted successfully", "success");
+          if (redirectTo) {
+            navigate(redirectTo);
+          }
+          onSuccess?.();
+        },
+        onError: () => {
+          showAlert("Error deleting post", "error");
+        },
+      });
+    }
+  };
+
+  return { handleDelete, isDeleting: deletePost.isLoading };
 }

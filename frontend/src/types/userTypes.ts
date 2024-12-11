@@ -6,3 +6,8 @@ export interface UserProfile {
   avatar: string;
   created_at: string;
 }
+
+export interface EditProfileModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
