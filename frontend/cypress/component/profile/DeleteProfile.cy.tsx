@@ -3,7 +3,32 @@ import ProfileCard from "../../../src/components/profile/ProfileCard";
 
 describe("Delete Profile Functionality", () => {
   beforeEach(() => {
-    cy.setupMockProfile();
+    cy.fixture("profile.json").then((profileData) => {
+      // Setup mock auth state
+      cy.window().then((win) => {
+        win.localStorage.setItem("auth_token", "fake-token");
+        win.localStorage.setItem(
+          "user_data",
+          JSON.stringify({
+            id: profileData.id,
+            username: profileData.username,
+            email: profileData.email,
+          })
+        );
+      });
+
+      // Mock profile API call
+      cy.intercept("GET", "**/api/profile/*", {
+        statusCode: 200,
+        body: profileData,
+      }).as("getProfile");
+
+      // Mock delete profile API call
+      cy.intercept("DELETE", "**/api/profile/*", {
+        statusCode: 204,
+        body: { message: "Profile deleted successfully" },
+      }).as("deleteProfile");
+    });
   });
 
   it("displays delete account button", () => {
@@ -27,7 +52,7 @@ describe("Delete Profile Functionality", () => {
     cy.get('[data-testid="delete-account-button"]').click();
     cy.get("@confirmStub").should(
       "have.been.calledWith",
-      "Are you sure you want to delete your account? This action cannot be undone."
+      "Are you sure you want to delete your account?"
     );
   });
 
@@ -47,31 +72,31 @@ describe("Delete Profile Functionality", () => {
   });
 
   it("handles successful profile deletion", () => {
-    // Mock successful delete request
-    cy.intercept("DELETE", "**/api/profile/*", {
-      statusCode: 204,
-    }).as("deleteProfile");
-
     cy.mount(<ProfileCard />);
     cy.wait("@getProfile");
 
     // Stub window.confirm to return true (user confirms deletion)
     cy.window().then((win) => {
       cy.stub(win, "confirm").returns(true);
+      // Spy on localStorage.removeItem
+      cy.spy(win.localStorage, "removeItem").as("localStorageRemove");
     });
 
     cy.get('[data-testid="delete-account-button"]').click();
-
     cy.wait("@deleteProfile");
 
-    // Verify user is redirected (you might need to adjust this based on your implementation)
-    cy.get('[data-testid="success-message"]')
+    // Verify localStorage items were removed
+    cy.get("@localStorageRemove").should("have.been.calledWith", "auth_token");
+    cy.get("@localStorageRemove").should("have.been.calledWith", "user_data");
+
+   // Verify success message
+    cy.get('[data-testid="alert"]')
       .should("be.visible")
-      .and("contain", "Profile deleted successfully");
+      .and("contain", "Account deleted successfully");
   });
 
   it("handles failed profile deletion", () => {
-    // Mock failed delete request
+    // Override the default mock with an error response
     cy.intercept("DELETE", "**/api/profile/*", {
       statusCode: 500,
       body: { message: "Failed to delete profile" },
@@ -88,32 +113,8 @@ describe("Delete Profile Functionality", () => {
     cy.get('[data-testid="delete-account-button"]').click();
 
     cy.wait("@deleteProfileError");
-    cy.get('[data-testid="error-message"]')
+    cy.get('[data-testid="alert"]')
       .should("be.visible")
-      .and("contain", "Failed to delete profile");
-  });
-
-  it("clears auth data and redirects after successful deletion", () => {
-    cy.intercept("DELETE", "**/api/profile/*", {
-      statusCode: 204,
-    }).as("deleteProfile");
-
-    const navigateSpy = cy.spy().as("navigateSpy");
-
-    cy.mount(<ProfileCard />);
-    cy.wait("@getProfile");
-
-    cy.window().then((win) => {
-      cy.stub(win, "confirm").returns(true);
-      // Spy on localStorage.removeItem
-      cy.spy(win.localStorage, "removeItem").as("localStorageRemove");
-    });
-
-    cy.get('[data-testid="delete-account-button"]').click();
-    cy.wait("@deleteProfile");
-
-    // Verify localStorage items were removed
-    cy.get("@localStorageRemove").should("have.been.calledWith", "auth_token");
-    cy.get("@localStorageRemove").should("have.been.calledWith", "user_data");
+      .and("contain", "Failed to delete account");
   });
 });

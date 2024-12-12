@@ -1,5 +1,10 @@
 # CHANGELOG
 
+### 2024-12-12 feat: Cypress test updates
+
+- **Beskrivning**:
+  - Uppdaterar, adderar och förbättrar tester.
+
 ### 2024-12-11 feat: profile and post enhancements, Cypress test updates
 
 - **Beskrivning**:

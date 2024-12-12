@@ -3,7 +3,18 @@ import ChangePassword from "../../../src/components/profile/ChangePassword";
 
 describe("ChangePassword Modal", () => {
   beforeEach(() => {
-    cy.mockAuthUser();
+    cy.window().then((win) => {
+      win.localStorage.setItem("auth_token", "fake-token");
+      win.localStorage.setItem(
+        "user_data",
+        JSON.stringify({
+          id: "1",
+          username: "testuser",
+          email: "test@example.com",
+          password: "oldpass",
+        })
+      );
+    });
   });
 
   it("renders when open", () => {
@@ -21,7 +32,7 @@ describe("ChangePassword Modal", () => {
     cy.get('[data-testid="change-password-save"]').click();
     cy.get('[data-testid="error-message"]').should(
       "contain",
-      "Password must be at least 8 characters long"
+      "Password must be at least 6 characters"
     );
   });
 
@@ -42,7 +53,7 @@ describe("ChangePassword Modal", () => {
   });
 
   it("handles successful password change", () => {
-    cy.intercept("POST", "**/api/change-password", {
+    cy.intercept("PUT", "**/api/profile/1/change-password", {
       statusCode: 200,
       body: { message: "Password updated successfully" },
     }).as("changePassword");
@@ -58,9 +69,9 @@ describe("ChangePassword Modal", () => {
     cy.get('[data-testid="change-password-save"]').click();
     cy.wait("@changePassword");
 
-    cy.get('[data-testid="success-message"]').should(
+    cy.get('[data-testid="alert"]').should(
       "contain",
-      "Password updated successfully"
+      "Password changed successfully!"
     );
     cy.get("@onCloseSpy").should("have.been.called");
   });

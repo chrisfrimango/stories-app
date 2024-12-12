@@ -3,10 +3,16 @@ import { UserProfile } from "./userTypes";
 
 export interface PostCardProps {
   post: Post;
+  isFeatured?: boolean;
+  heightOverride?: number;
 }
 
 export interface PostsResponse {
   posts: Post[];
+}
+
+export interface PostResponse {
+  post: Post;
 }
 
 export type { Post };
@@ -47,4 +53,10 @@ export interface Category {
 
 export interface CategoriesResponse {
   categories: Category[];
+}
+
+export interface UseHandlePostDeleteOptions {
+  postId: string;
+  onSuccess?: () => void;
+  redirectTo?: string;
 }

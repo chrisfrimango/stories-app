@@ -9,7 +9,7 @@ import {
   CardActions,
   Button,
 } from "@mui/material";
-import { usePost, useHandlePostDelete } from "../hooks/usePost";
+import { usePost, useDeletePost } from "../hooks/usePost";
 import { Loading } from "../ui/Loading";
 import { Error } from "../ui/Error";
 import { useAuth } from "../context/authContext";
@@ -21,7 +21,7 @@ const PostDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { data: post, error, isLoading } = usePost(id!);
   const { openEditPostModal } = useModal();
-  const { handleDelete, isDeleting } = useHandlePostDelete({
+  const { handleDelete, isDeleting } = useDeletePost({
     postId: id!,
     redirectTo: "/blog",
   });

@@ -41,10 +41,6 @@ export const authService = {
     return response.data;
   },
 
-  // logout: () => {
-  //   localStorage.removeItem("auth_token");
-  // },
-
   isAuthenticated: (): boolean => {
     return !!localStorage.getItem("auth_token");
   },

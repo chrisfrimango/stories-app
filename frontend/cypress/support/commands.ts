@@ -1,4 +1,5 @@
 /// <reference types="cypress" />
+import { User } from "../../src/types/api";
 
 export {};
 
@@ -15,6 +16,7 @@ declare global {
       setupMockProfile(): Chainable<void>;
       editMockProfile(): Chainable<void>;
       mockAuthUser(): Chainable<void>;
+      setupDeleteProfile(): Chainable<void>; // Make sure this is declared
     }
   }
 }
@@ -111,5 +113,34 @@ Cypress.Commands.add("mockAuthUser", () => {
         email: "test@example.com",
       })
     );
+  });
+});
+
+Cypress.Commands.add("setupDeleteProfile", () => {
+  cy.fixture("profile.json").then((profileData) => {
+    // Setup mock auth state
+    cy.window().then((win) => {
+      win.localStorage.setItem("auth_token", "fake-token");
+      win.localStorage.setItem(
+        "user_data",
+        JSON.stringify({
+          id: profileData.id,
+          username: profileData.username,
+          email: profileData.email,
+        })
+      );
+    });
+
+    // Mock profile API call
+    cy.intercept("GET", "**/api/profile/*", {
+      statusCode: 200,
+      body: profileData,
+    }).as("getProfile");
+
+    // Mock delete profile API call
+    cy.intercept("DELETE", "**/api/profile/*", {
+      statusCode: 204,
+      body: { message: "Profile deleted successfully" },
+    }).as("deleteProfile");
   });
 });

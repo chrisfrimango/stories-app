@@ -1,3 +1,4 @@
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Suspense } from "react";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes/RouterConfig";
@@ -28,6 +29,7 @@ function App() {
           </AuthProvider>
         </ThemeProvider>
       </MUIThemeProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }

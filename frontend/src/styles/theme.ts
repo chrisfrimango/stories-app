@@ -2,7 +2,7 @@ import { DefaultTheme, createTheme } from "@mui/material/styles";
 
 export const theme: DefaultTheme = {
   colors: {
-    primary: "#007bff",
+    primary: "#343a40",
     secondary: "#6c757d",
     background: "#f8f9fa",
     text: "#343a40",

@@ -2,14 +2,14 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
+import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import { Button, CardActionArea } from "@mui/material";
+import { CardActionArea, Link } from "@mui/material";
 import { useAuth } from "../../context/authContext";
 import { PostCardProps } from "../../types/postsTypes";
 import { theme } from "../../styles/theme";
-import { useHandlePostDelete } from "../../hooks/usePost";
+import { useDeletePost } from "../../hooks/usePost";
 import { useModal } from "../../context/modalContext";
 
 const StyledCard = styled(Card)({
@@ -38,28 +38,35 @@ const MetaContainer = styled("div")(({ theme }) => ({
   alignItems: "center",
   fontSize: "0.875rem",
   color: theme.palette.text.secondary,
-  marginTop: "auto",
+  marginTop: theme.spacing(2),
 }));
 
-const PostCard: React.FC<PostCardProps> = ({ post }) => {
+const ActionLinks = styled("div")(({ theme }) => ({
+  display: "flex",
+  gap: theme.spacing(2),
+  marginTop: theme.spacing(2),
+}));
+
+const PostCard: React.FC<PostCardProps> = ({
+  post,
+  isFeatured,
+  heightOverride,
+}) => {
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
   const { openEditPostModal } = useModal();
-  const { handleDelete, isDeleting } = useHandlePostDelete({
+  const { handleDelete, isDeleting } = useDeletePost({
     postId: post.id.toString(),
   });
 
   const handleClick = () => {
     if (isAuthenticated && user?.username) {
-      // Om inloggad användare är författaren, använd deras username i URL
       if (user.username === post.username) {
         navigate(`/${user.username}/post/${post.id}`);
       } else {
-        // Om inloggad användare inte är författaren, använd författarens username
         navigate(`/${post.username}/post/${post.id}`);
       }
     } else {
-      // Om inte inloggad, använd författarens username
       navigate(`/${post.username}/post/${post.id}`);
     }
   };
@@ -67,46 +74,87 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   return (
     <StyledCard>
       <StyledCardActionArea onClick={handleClick}>
+        <CardMedia
+          component="img"
+          height={heightOverride || 200}
+          image={post.image_url || "https://placehold.co/400"}
+          alt={post.title}
+          sx={{
+            height: heightOverride || 200,
+            objectFit: "cover",
+          }}
+        />
         <CardContent>
-          <Typography variant="h5" component="h2" gutterBottom>
+          <Typography
+            gutterBottom
+            variant={isFeatured ? "h4" : "h5"}
+            component="h2"
+            sx={{
+              fontWeight: "bold",
+              fontSize: isFeatured ? "2rem" : "1.5rem",
+            }}
+          >
             {post.title}
           </Typography>
-          <Typography variant="body2" color="text.secondary" paragraph>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
             {post.content.length > 150
               ? `${post.content.substring(0, 150)}...`
               : post.content}
           </Typography>
           <MetaContainer>
-            <Typography variant="body2">By {user?.username}</Typography>
+            <Typography variant="body2">By {post.username}</Typography>
             <Typography variant="body2">
               {new Date(post.created_at).toLocaleDateString()}
             </Typography>
             <Typography variant="body2">{post.category_name}</Typography>
           </MetaContainer>
+          {isAuthenticated && Number(user?.id) === post.user_id && (
+            <ActionLinks>
+              <Link
+                component="button"
+                variant="body2"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openEditPostModal(post);
+                }}
+                sx={{
+                  textDecoration: "none",
+                  paddingBottom: "2px",
+                  "&:hover": {
+                    textDecoration: "underline",
+                    textUnderlineOffset: "4px",
+                  },
+                }}
+              >
+                Edit
+              </Link>
+              <Link
+                component="button"
+                variant="body2"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete();
+                }}
+                disabled={isDeleting}
+                sx={{
+                  textDecoration: "none",
+                  color: "error.main",
+                  paddingBottom: "2px",
+                  "&:hover": {
+                    textDecoration: "underline",
+                    textUnderlineOffset: "4px",
+                  },
+                  "&.Mui-disabled": {
+                    color: "text.disabled",
+                  },
+                }}
+              >
+                Delete
+              </Link>
+            </ActionLinks>
+          )}
         </CardContent>
       </StyledCardActionArea>
-      <CardActions sx={{ justifyContent: "flex-end" }}>
-        {isAuthenticated && Number(user?.id) === post.user_id && (
-          <>
-            <Button
-              variant="contained"
-              size="small"
-              onClick={() => openEditPostModal(post)}
-            >
-              Edit
-            </Button>
-            <Button
-              color="error"
-              variant="contained"
-              size="small"
-              onClick={handleDelete}
-              disabled={isDeleting}
-            >
-              Delete
-            </Button>
-          </>
-        )}
-      </CardActions>
     </StyledCard>
   );
 };

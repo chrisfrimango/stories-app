@@ -1,16 +1,10 @@
 import React from "react";
-import styled from "styled-components";
-import PostCard from "./PostCard";
+import { Grid } from "@mui/material";
+import Box from "@mui/material/Box";
 import { usePosts } from "../../hooks/usePost";
+import PostCard from "./PostCard";
 import { Loading } from "../../ui/Loading";
 import { Error } from "../../ui/Error";
-
-const PostGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
-  padding: 20px;
-`;
 
 const PostList: React.FC = () => {
   const { data: posts, error, isLoading } = usePosts();
@@ -19,11 +13,30 @@ const PostList: React.FC = () => {
   if (error) return <Error message="Failed to load posts" />;
 
   return (
-    <PostGrid>
-      {posts?.map((post) => (
-        <PostCard key={post.id} post={post} />
-      ))}
-    </PostGrid>
+    <Box sx={{ flexGrow: 1, margin: "0 auto", maxWidth: 1200 }}>
+      <Grid container spacing={{ xs: 2, md: 3 }}>
+        {posts?.map((post, index) => {
+          const isFeatured = index === 0;
+          const isSecondary = index === 1 || index === 2;
+
+          return (
+            <Grid
+              item
+              key={post.id}
+              xs={12}
+              sm={isSecondary ? 6 : isFeatured ? 12 : 6}
+              md={isSecondary ? 4 : isFeatured ? 8 : 4}
+            >
+              <PostCard
+                post={post}
+                isFeatured={isFeatured}
+                heightOverride={isFeatured ? 400 : isSecondary ? 300 : 250}
+              />
+            </Grid>
+          );
+        })}
+      </Grid>
+    </Box>
   );
 };
 

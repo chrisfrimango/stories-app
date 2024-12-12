@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-// import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { PostFormData, postSchema } from "../../validation/schema";
 import { CreatePostModalProps } from "../../types/postsTypes";
@@ -134,11 +133,11 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
 }) => {
   const { showAlert } = useAlert();
   const { data: categories } = useCategories();
-  console.log("🚀 ~ categories:", categories);
-  // const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { user } = useAuth();
   const createPost = useCreatePost();
+
+  console.log("categories", categories);
 
   const onSubmit = async (data: PostFormData) => {
     try {
@@ -178,14 +177,17 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
 
   return (
     <Overlay onClick={onClose}>
-      <Modal onClick={(e) => e.stopPropagation()}>
+      <Modal
+        onClick={(e) => e.stopPropagation()}
+        data-testid="create-post-modal"
+      >
         <Title>Create New Post</Title>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormGroup>
             <Input
               {...register("title")}
               placeholder="Post title"
-              data-testid="post-title"
+              data-testid="post-title-input"
             />
             {errors.title && <span>{errors.title.message}</span>}
           </FormGroup>
@@ -194,7 +196,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
             <TextArea
               {...register("content")}
               placeholder="Write your post content..."
-              data-testid="post-content"
+              data-testid="post-content-input"
             />
             {errors.content && <span>{errors.content.message}</span>}
           </FormGroup>
@@ -203,13 +205,17 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
             <Select
               {...register("category")}
               defaultValue=""
-              data-testid="post-category"
+              data-testid="category-select"
             >
               <Option value="" disabled>
                 Select a category
               </Option>
               {categories?.map((category) => (
-                <Option key={category.id} value={category.id}>
+                <Option
+                  key={category.id}
+                  value={category.id}
+                  data-testid="category-select-option"
+                >
                   {category.name}
                 </Option>
               )) || <Option value="">No categories found</Option>}

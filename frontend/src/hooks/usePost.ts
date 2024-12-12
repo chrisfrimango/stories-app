@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { PostsResponse, Post, CategoriesResponse } from "../types/postsTypes";
+import {
+  PostsResponse,
+  Post,
+  CategoriesResponse,
+  UseHandlePostDeleteOptions,
+} from "../types/postsTypes";
 import { api } from "../services/authService";
 import { PostFormData } from "../validation/schema";
 import { UserProfile } from "../types/userTypes";
@@ -51,23 +56,43 @@ export function usePost(id: string) {
   return useQuery({
     queryKey: ["post", id],
     queryFn: () => postApi.fetchById(id),
-    select: (data) => data.post,
+    select: (data: Post) => data.post,
   });
 }
 
-export function useDeletePost(id: string) {
+export function useDeletePost({
+  postId,
+  onSuccess,
+  redirectTo,
+}: UseHandlePostDeleteOptions) {
   const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: () => postApi.deleteById(id),
+  const { showAlert } = useAlert();
+  const navigate = useNavigate();
+
+  const mutation = useMutation({
+    mutationFn: () => postApi.deleteById(postId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
-      queryClient.removeQueries({ queryKey: ["post", id] });
-      return "Post deleted successfully";
+      queryClient.removeQueries({ queryKey: ["post", postId] });
+      showAlert("Post deleted successfully", "success");
+      if (redirectTo) {
+        navigate(redirectTo);
+      }
+      onSuccess?.();
     },
     onError: (error) => {
       console.error("Error deleting post:", error);
+      showAlert("Error deleting post", "error");
     },
   });
+
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      mutation.mutate();
+    }
+  };
+
+  return { handleDelete, isDeleting: mutation.isLoading };
 }
 
 export function useCreatePost() {
@@ -113,39 +138,4 @@ export function useProfile(id: string) {
     queryKey: ["profile", id],
     queryFn: () => profileApi.fetchProfile(id),
   });
-}
-
-export interface UseHandlePostDeleteOptions {
-  postId: string;
-  onSuccess?: () => void;
-  redirectTo?: string;
-}
-
-export function useHandlePostDelete({
-  postId,
-  onSuccess,
-  redirectTo,
-}: UseHandlePostDeleteOptions) {
-  const { showAlert } = useAlert();
-  const deletePost = useDeletePost(postId);
-  const navigate = useNavigate();
-
-  const handleDelete = () => {
-    if (window.confirm("Are you sure you want to delete this post?")) {
-      deletePost.mutate(undefined, {
-        onSuccess: () => {
-          showAlert("Post deleted successfully", "success");
-          if (redirectTo) {
-            navigate(redirectTo);
-          }
-          onSuccess?.();
-        },
-        onError: () => {
-          showAlert("Error deleting post", "error");
-        },
-      });
-    }
-  };
-
-  return { handleDelete, isDeleting: deletePost.isLoading };
 }

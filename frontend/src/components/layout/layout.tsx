@@ -25,6 +25,10 @@ const HeaderWrapper = styled.div`
   z-index: 1000;
   background-color: ${({ theme }) => theme.colors.background};
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 1290px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
 `;
 
 const Main = styled.main`

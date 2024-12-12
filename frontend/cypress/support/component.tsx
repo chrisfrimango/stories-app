@@ -39,6 +39,7 @@ if (typeof window === "undefined") {
 
 interface TestWrapperProps {
   children: React.ReactNode;
+  initialModalState?: Cypress.MountOptions["initialModalState"];
 }
 
 export function TestWrapper({ children }: TestWrapperProps) {
@@ -70,7 +71,8 @@ export function TestWrapper({ children }: TestWrapperProps) {
 
 // Mount command
 Cypress.Commands.add("mount", (component: React.ReactNode) => {
-  return mount(React.createElement(TestWrapper, null, component));
+  const wrapped = <TestWrapper>{component}</TestWrapper>;
+  return mount(wrapped);
 });
 
 // Global error handler
