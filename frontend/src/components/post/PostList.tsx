@@ -11,6 +11,7 @@ const PostList: React.FC = () => {
 
   if (isLoading) return <Loading message="Loading posts..." />;
   if (error) return <Error message="Failed to load posts" />;
+  if (!posts || posts.length === 0) return <Error message="No posts found" />;
 
   return (
     <Box sx={{ flexGrow: 1, margin: "0 auto", maxWidth: 1200 }}>

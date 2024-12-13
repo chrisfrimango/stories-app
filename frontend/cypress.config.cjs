@@ -43,6 +43,11 @@ module.exports = defineConfig({
     },
     supportFile: "cypress/support/component.tsx",
     setupNodeEvents(on, config) {
+      return config;
+    },
+  },
+  e2e: {
+    setupNodeEvents(on, config) {
       coverage(on, config);
       return config;
     },

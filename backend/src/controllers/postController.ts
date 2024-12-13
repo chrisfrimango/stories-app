@@ -56,7 +56,6 @@ export const createPost = async (
   res: Response<{ post: PostResponse } | ErrorResponse>
 ): Promise<void> => {
   try {
-    console.log("createPost");
     const { title, content, category } = req.body;
     const userId = (req as AuthenticatedRequest).user.userId;
 

@@ -22,7 +22,6 @@ export const postApi = {
     return data;
   },
   create: async (postData: PostFormData) => {
-    console.log("🚀 ~ postData:", postData);
     const { data } = await api.post("/posts", postData);
     return data;
   },

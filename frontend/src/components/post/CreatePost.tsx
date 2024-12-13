@@ -9,6 +9,7 @@ import { useCreatePost } from "../../hooks/usePost";
 import { useAlert } from "../../context/alertContext";
 import { useCategories } from "../../hooks/usePost";
 import { useAuth } from "../../context/authContext";
+import { Error } from "../../ui/Error";
 
 const Overlay = styled.div`
   position: fixed;
@@ -140,19 +141,19 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
   console.log("categories", categories);
 
   const onSubmit = async (data: PostFormData) => {
+    console.log("🚀 ~ onSubmit ~ data:", data);
+
     try {
       const response = await createPost.mutateAsync(data);
       showAlert("Post created successfully!", "success");
       reset();
-      setTimeout(() => {
-        onClose();
-        // Hantera navigation här istället
-        if (user?.username) {
-          navigate(`/${user.username}/post/${response.post.id}`);
-        } else {
-          navigate(`/post/${response.post.id}`);
-        }
-      }, 1000);
+      onClose();
+      // Hantera navigation här istället
+      if (user?.username) {
+        navigate(`/${user.username}/post/${response.post.id}`);
+      } else {
+        navigate(`/post/${response.post.id}`);
+      }
     } catch (error) {
       console.error("Failed to create post:", error);
       showAlert("Failed to create post", "error");
@@ -189,7 +190,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
               placeholder="Post title"
               data-testid="post-title-input"
             />
-            {errors.title && <span>{errors.title.message}</span>}
+            {errors.title && <Error message={errors.title.message} />}
           </FormGroup>
 
           <FormGroup>
@@ -198,7 +199,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
               placeholder="Write your post content..."
               data-testid="post-content-input"
             />
-            {errors.content && <span>{errors.content.message}</span>}
+            {errors.content && <Error message={errors.content.message} />}
           </FormGroup>
 
           <FormGroup>
@@ -220,13 +221,15 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
                 </Option>
               )) || <Option value="">No categories found</Option>}
             </Select>
-            {errors.category && (
-              <span data-testid="error-message">{errors.category.message}</span>
-            )}
+            {errors.category && <Error message={errors.category.message} />}
           </FormGroup>
 
           <ButtonGroup>
-            <CancelButton type="button" onClick={onClose}>
+            <CancelButton
+              type="button"
+              onClick={onClose}
+              data-testid="create-post-cancel"
+            >
               Cancel
             </CancelButton>
             <SubmitButton

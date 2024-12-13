@@ -72,7 +72,7 @@ const PostCard: React.FC<PostCardProps> = ({
   };
 
   return (
-    <StyledCard>
+    <StyledCard data-testid="post-card">
       <StyledCardActionArea onClick={handleClick}>
         <CardMedia
           component="img"
@@ -83,6 +83,7 @@ const PostCard: React.FC<PostCardProps> = ({
             height: heightOverride || 200,
             objectFit: "cover",
           }}
+          data-testid="post-image"
         />
         <CardContent>
           <Typography
@@ -93,23 +94,33 @@ const PostCard: React.FC<PostCardProps> = ({
               fontWeight: "bold",
               fontSize: isFeatured ? "2rem" : "1.5rem",
             }}
+            data-testid="post-title"
           >
             {post.title}
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ mb: 2 }}
+            data-testid="post-content"
+          >
             {post.content.length > 150
               ? `${post.content.substring(0, 150)}...`
               : post.content}
           </Typography>
           <MetaContainer>
-            <Typography variant="body2">By {post.username}</Typography>
-            <Typography variant="body2">
+            <Typography variant="body2" data-testid="post-author">
+              By {post.username}
+            </Typography>
+            <Typography variant="body2" data-testid="post-date">
               {new Date(post.created_at).toLocaleDateString()}
             </Typography>
-            <Typography variant="body2">{post.category_name}</Typography>
+            <Typography variant="body2" data-testid="post-category">
+              {post.category_name}
+            </Typography>
           </MetaContainer>
           {isAuthenticated && Number(user?.id) === post.user_id && (
-            <ActionLinks>
+            <ActionLinks data-testid="post-action-links">
               <Link
                 component="button"
                 variant="body2"
@@ -148,6 +159,7 @@ const PostCard: React.FC<PostCardProps> = ({
                     color: "text.disabled",
                   },
                 }}
+                data-testid="post-delete-link"
               >
                 Delete
               </Link>

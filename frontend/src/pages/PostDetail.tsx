@@ -59,7 +59,7 @@ const PostDetail: React.FC = () => {
         }}
       >
         <Box component="header" sx={{ mb: 4 }}>
-          <Typography variant="h2" component="h1" gutterBottom>
+          <Typography variant="h2" component="h1" gutterBottom data-testid="post-title">
             {post.title}
           </Typography>
 
@@ -71,11 +71,11 @@ const PostDetail: React.FC = () => {
               mb: 2,
             }}
           >
-            <Typography variant="subtitle1">By {post.username}</Typography>
+            <Typography variant="subtitle1" data-testid="post-author">By {post.username}</Typography>
             <Typography variant="subtitle1">
               {new Date(post.created_at).toLocaleDateString()}
             </Typography>
-            <Typography variant="subtitle1">{post.category_name}</Typography>
+            <Typography variant="subtitle1" data-testid="post-category">{post.category_name}</Typography>
           </Box>
           <Divider />
         </Box>
@@ -88,6 +88,7 @@ const PostDetail: React.FC = () => {
               lineHeight: 1.7,
               "& p": { mb: 3 },
             }}
+            data-testid="post-content"
           >
             {post.content}
           </Typography>
@@ -99,6 +100,7 @@ const PostDetail: React.FC = () => {
                 variant="contained"
                 size="small"
                 onClick={() => openEditPostModal(post)}
+                data-testid="edit-button"
               >
                 Edit
               </Button>
@@ -108,6 +110,7 @@ const PostDetail: React.FC = () => {
                 size="small"
                 onClick={handleDelete}
                 disabled={isDeleting}
+                data-testid="delete-button"
               >
                 Delete
               </Button>

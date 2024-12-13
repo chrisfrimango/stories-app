@@ -168,21 +168,29 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <Overlay onClick={onClose}>
-      <Modal onClick={(e) => e.stopPropagation()}>
+      <Modal onClick={(e) => e.stopPropagation()} data-testid="edit-post-modal">
         <Title>Edit Post</Title>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormGroup>
-            <Input {...register("title")} />
+            <Input
+              {...register("title")}
+              data-testid="post-title-input"
+              placeholder="Title"
+            />
             {errors.title && <span>{errors.title.message}</span>}
           </FormGroup>
 
           <FormGroup>
-            <TextArea {...register("content")} />
+            <TextArea
+              {...register("content")}
+              data-testid="post-content-input"
+              placeholder="Content"
+            />
             {errors.content && <span>{errors.content.message}</span>}
           </FormGroup>
 
           <FormGroup>
-            <Select {...register("category")}>
+            <Select {...register("category")} data-testid="category-select">
               <option value="" disabled>
                 Select a category
               </option>
@@ -196,10 +204,18 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ isOpen, onClose }) => {
           </FormGroup>
 
           <ButtonGroup>
-            <CancelButton type="button" onClick={onClose}>
+            <CancelButton
+              type="button"
+              onClick={onClose}
+              data-testid="edit-post-cancel"
+            >
               Cancel
             </CancelButton>
-            <SubmitButton type="submit" disabled={editPost.isLoading}>
+            <SubmitButton
+              type="submit"
+              disabled={editPost.isLoading}
+              data-testid="edit-post-submit"
+            >
               {editPost.isLoading ? "Editing..." : "Edit Post"}
             </SubmitButton>
           </ButtonGroup>
