@@ -1,5 +1,14 @@
 # CHANGELOG
 
+### 2024-12-13 feat: GitHub Actions CI/CD and Database Migrations
+
+- **Beskrivning**:
+  - Implementerar GitHub Actions workflow för CI/CD
+  - Lägger till databasmigreringar för automatisk setup
+  - coverage reporting
+  - Konfigurerar GitHub Secrets för säker hantering av miljövariabler
+  - Optimerar CI pipeline med caching för Node modules och Cypress binary
+
 ### 2024-12-12 feat: Cypress test updates
 
 - **Beskrivning**:

@@ -136,6 +136,7 @@ const PostCard: React.FC<PostCardProps> = ({
                     textUnderlineOffset: "4px",
                   },
                 }}
+                data-testid="edit-button"
               >
                 Edit
               </Link>

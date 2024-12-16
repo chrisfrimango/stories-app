@@ -4,8 +4,9 @@ import { ErrorProps } from "../types/uiTypes";
 
 const ErrorContainer = styled.div`
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  gap: 20px;
   padding: 2rem;
   color: ${({ theme }) => theme.colors.text};
   text-align: center;

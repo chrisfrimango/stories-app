@@ -1,0 +1,26 @@
+{
+  "all": true,
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "check-coverage": true,
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "cypress/**/*.*",
+    "src/main.tsx",
+    "src/vite-env.d.ts",
+    "**/*.d.ts",
+    "**/*.test.*"
+  ],
+  "reporter": [
+    "text",
+    "json",
+    "html",
+    "lcov"
+  ],
+  "statements": 0,
+  "branches": 0,
+  "functions": 0,
+  "lines": 0
+}

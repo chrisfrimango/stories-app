@@ -11,23 +11,25 @@ const coverage = require("@cypress/code-coverage/task");
 module.exports = defineConfig({
   e2e: {
     baseUrl: "http://localhost:5173",
+    specPattern: [
+      "cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",
+      "cypress/e2e/**/*.feature",
+    ],
     async setupNodeEvents(on, config) {
+      // Add cucumber plugin
+      await addCucumberPreprocessorPlugin(on, config);
+
+      // Create bundler
       const bundler = createBundler({
         plugins: [createEsbuildPlugin(config)],
       });
       on("file:preprocessor", bundler);
 
-      await addCucumberPreprocessorPlugin(on, config);
+      // Setup code coverage
       coverage(on, config);
 
       return config;
     },
-    specPattern: [
-      // E2E-filer Cypress letar efter som standard
-      "cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",
-      // Tillägg för Cucumber
-      "cypress/e2e/**/*.feature",
-    ],
   },
   env: {
     API_URL: "http://localhost:3000/api",
@@ -43,12 +45,6 @@ module.exports = defineConfig({
     },
     supportFile: "cypress/support/component.tsx",
     setupNodeEvents(on, config) {
-      return config;
-    },
-  },
-  e2e: {
-    setupNodeEvents(on, config) {
-      coverage(on, config);
       return config;
     },
   },

@@ -40,6 +40,7 @@ const PostDetail: React.FC = () => {
         flexDirection: "column",
         justifyContent: "center",
       }}
+      data-testid="post-detail-card"
     >
       <Box sx={{ display: "flex", justifyContent: "flex-start", mb: 4 }}>
         <Button
@@ -59,7 +60,12 @@ const PostDetail: React.FC = () => {
         }}
       >
         <Box component="header" sx={{ mb: 4 }}>
-          <Typography variant="h2" component="h1" gutterBottom data-testid="post-title">
+          <Typography
+            variant="h2"
+            component="h1"
+            gutterBottom
+            data-testid="post-title"
+          >
             {post.title}
           </Typography>
 
@@ -71,11 +77,15 @@ const PostDetail: React.FC = () => {
               mb: 2,
             }}
           >
-            <Typography variant="subtitle1" data-testid="post-author">By {post.username}</Typography>
+            <Typography variant="subtitle1" data-testid="post-author">
+              By {post.username}
+            </Typography>
             <Typography variant="subtitle1">
               {new Date(post.created_at).toLocaleDateString()}
             </Typography>
-            <Typography variant="subtitle1" data-testid="post-category">{post.category_name}</Typography>
+            <Typography variant="subtitle1" data-testid="post-category">
+              {post.category_name}
+            </Typography>
           </Box>
           <Divider />
         </Box>

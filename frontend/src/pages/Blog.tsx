@@ -11,7 +11,12 @@ const Blog: React.FC = () => {
   return (
     <Container maxWidth="lg" sx={{ pt: 8, pb: 6 }}>
       <Box sx={{ pb: 5 }}>
-        <Typography variant="h5" align="left" color="text.secondary">
+        <Typography
+          variant="h5"
+          align="left"
+          color="text.secondary"
+          data-testid="welcome-message"
+        >
           {isAuthenticated ? (
             <>
               Welcome{" "}

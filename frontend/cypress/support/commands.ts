@@ -16,7 +16,8 @@ declare global {
       setupMockProfile(): Chainable<void>;
       editMockProfile(): Chainable<void>;
       mockAuthUser(): Chainable<void>;
-      setupDeleteProfile(): Chainable<void>; // Make sure this is declared
+      setupDeleteProfile(): Chainable<void>;
+      loginViaUI(email: string, password: string): Chainable<void>;
     }
   }
 }
@@ -36,6 +37,27 @@ Cypress.Commands.add("login", (email: string, password: string) => {
   cy.get('[data-testid="password-input"]').type(password);
   cy.get('[data-testid="login-button"]').click();
   cy.wait("@loginRequest");
+});
+
+Cypress.Commands.add("loginViaUI", (email: string, password: string) => {
+  cy.visit("/login");
+
+  cy.fixture("users.json").then((userData) => {
+    cy.intercept("POST", `${Cypress.env("API_URL")}/users/login`, {
+      statusCode: 200,
+      body: userData.mockLoginResponse,
+    }).as("loginRequest");
+  });
+
+  cy.get('[data-testid="email-input"]').type(email);
+  cy.get('[data-testid="password-input"]').type(password);
+  cy.get('[data-testid="login-button"]').click();
+
+  cy.wait("@loginRequest").then((interception) => {
+    expect(interception.response.statusCode).to.equal(200);
+  });
+
+  cy.url().should("include", "/blog");
 });
 
 // Mock auth state command

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Button, MenuItem, useMediaQuery, useTheme } from "@mui/material";
 import { useAuth } from "../../context/authContext";
 import { NavBarProps } from "../../types/layoutTypes";
+import CreatePostButton from "../common/CreatePostButton";
 
 const NavBar: React.FC<NavBarProps> = ({ onCreatePost }) => {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ const NavBar: React.FC<NavBarProps> = ({ onCreatePost }) => {
               >
                 Profile
               </MenuItem>
-              <MenuItem onClick={onCreatePost}>Create Post</MenuItem>
+              <CreatePostButton onClick={onCreatePost} variant="menuItem" />
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </>
           ) : (
@@ -66,19 +67,7 @@ const NavBar: React.FC<NavBarProps> = ({ onCreatePost }) => {
               >
                 Profile
               </Button>
-              <Button
-                variant="contained"
-                onClick={onCreatePost}
-                sx={{
-                  ...buttonSx,
-                  backgroundColor: "#333",
-                  "&:hover": {
-                    backgroundColor: "#555",
-                  },
-                }}
-              >
-                Create Post
-              </Button>
+              <CreatePostButton onClick={onCreatePost} />
               <Button
                 onClick={handleLogout}
                 sx={{

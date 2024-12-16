@@ -16,12 +16,13 @@ Feature: Manage Blog Posts
       | Field    | Value               |
       | title    | Updated First Post  |
       | content  | Updated content     |
+      | category | Travel             |
     And I click "Save Changes"
     Then I should see the updated post in the list
-    And I should see a success message
+    And I should see a "Post edited successfully" message
 
   Scenario: Delete a post
     When I click on the delete button for "Second Post"
     And I confirm the deletion
     Then "Second Post" should not be visible in the list
-    And I should see a success message
+    And I should see a "Post deleted successfully" message

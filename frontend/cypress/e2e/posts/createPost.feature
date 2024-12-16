@@ -5,7 +5,7 @@ Feature: Create Blog Post
 
   Background:
     Given I am logged in as "testuser"
-    And I am on the home page
+    Given I am on the blog page
 
   Scenario: Successfully create a new post
     When I click the "Create Post" button
@@ -15,7 +15,7 @@ Feature: Create Blog Post
       | content  | Test content    |
       | category | Technology      |
     And I click "Submit"
-    Then I should see a success message "Post created successfully"
+    Then I should see a success message "Post created successfully!"
     And I should see my new post in the list
 
   Scenario: Validation errors when submitting empty form

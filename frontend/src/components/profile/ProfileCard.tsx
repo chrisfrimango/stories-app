@@ -53,6 +53,7 @@ const ProfileCard: React.FC = () => {
         flexDirection: "column",
         justifyContent: "center",
       }}
+      data-testid="profile-card"
     >
       <Box sx={{ display: "flex", justifyContent: "flex-start", mb: 4 }}>
         <Button
