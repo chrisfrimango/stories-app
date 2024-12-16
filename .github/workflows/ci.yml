@@ -12,9 +12,17 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
     services:
       postgres:
-        image: postgres:latest
+        image: postgres:14
         env:
           POSTGRES_USER: ${{ secrets.DB_USER }}
           POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
@@ -26,71 +34,35 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+          --mount type=tmpfs,destination=/var/lib/postgresql/data
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Cache Node modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Cache Cypress binary
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/Cypress
-          key: cypress-${{ runner.os }}-${{ hashFiles('**/package.json') }}
-          restore-keys: |
-            cypress-${{ runner.os }}-
-
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: "18"
+          cache: "npm"
 
-      # Backend setup
-      - name: Install backend dependencies
-        working-directory: ./backend
-        run: npm install
+      - name: Install Dependencies
+        run: |
+          cd frontend && npm install
+          cd ../backend && npm install
 
-      - name: Run database migrations
-        working-directory: ./backend
-        env:
-          DB_HOST: localhost
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-        run: npm run migrate
+      - name: Run Database Migrations
+        run: |
+          cd backend
+          npm run migrate
 
-      - name: Build backend
-        working-directory: ./backend
-        run: npm run build
+      - name: Start Backend
+        run: |
+          cd backend
+          npm run dev &
+          sleep 10
 
-      - name: Start backend server
-        working-directory: ./backend
-        env:
-          DB_HOST: localhost
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          PORT: 3000
-        run: npm start &
-
-      # Frontend setup
-      - name: Install frontend dependencies
-        working-directory: ./frontend
-        run: npm install
-
-      - name: Build frontend
-        working-directory: ./frontend
-        run: npm run build
-
-      - name: Run Cypress component tests with coverage
+      - name: Run Cypress Component tests with coverage
         uses: cypress-io/github-action@v6
         with:
           working-directory: ./frontend
@@ -108,6 +80,12 @@ jobs:
           wait-on-timeout: 120
           command: npm run cypress:coverage
 
+      - name: Create artifact directories
+        run: |
+          mkdir -p frontend/cypress/videos
+          mkdir -p frontend/cypress/screenshots
+          mkdir -p frontend/coverage
+
       - name: Generate coverage report
         working-directory: ./frontend
         run: npm run coverage:report
@@ -118,6 +96,6 @@ jobs:
         with:
           name: test-results
           path: |
-            frontend/cypress/videos/
-            frontend/cypress/screenshots/
-            frontend/coverage/
+            frontend/cypress/videos/**
+            frontend/cypress/screenshots/**
+            frontend/coverage/**
