@@ -20,7 +20,6 @@ jobs:
       DB_NAME: ${{ secrets.DB_NAME }}
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
       NODE_ENV: test
-      CI: true
 
     services:
       postgres:
@@ -36,7 +35,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-          --mount type=tmpfs,destination=/var/lib/postgresql/data
 
     steps:
       - name: Checkout code
@@ -45,77 +43,50 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: '18.19.0'
 
-      # Debug information
-      - name: Debug Info
-        run: |
-          echo "Node version: $(node -v)"
-          echo "NPM version: $(npm -v)"
-          echo "Current directory: $(pwd)"
-          ls -la
-
-      # Frontend installation with verbose logging
       - name: Install Frontend Dependencies
         working-directory: ./frontend
         run: |
-          echo "Installing frontend dependencies..."
-          npm cache clean --force
-          npm install --verbose
-        continue-on-error: false
+          npm ci
 
-      # Backend installation with verbose logging
       - name: Install Backend Dependencies
         working-directory: ./backend
         run: |
-          echo "Installing backend dependencies..."
-          npm cache clean --force
-          npm install --verbose
-        continue-on-error: false
+          npm ci
 
       - name: Run Database Migrations
         working-directory: ./backend
-        run: |
-          echo "Running database migrations..."
-          npm run migrate
-        continue-on-error: false
+        run: npm run migrate
 
       - name: Start Backend
         working-directory: ./backend
         run: |
-          echo "Starting backend server..."
           npm run dev &
           sleep 10
 
-      - name: Run Cypress Component tests with coverage
+      - name: Run Cypress Component Tests
         uses: cypress-io/github-action@v6
         with:
           working-directory: ./frontend
           component: true
           browser: chrome
-          command: npm run cypress:coverage:component
+          start: npm run dev
+          wait-on: 'http://localhost:5173'
 
-      - name: Run Cypress E2E tests with coverage
+      - name: Run Cypress E2E Tests
         uses: cypress-io/github-action@v6
         with:
           working-directory: ./frontend
           browser: chrome
           start: npm run dev
-          wait-on: "http://localhost:5173, http://localhost:3000"
-          wait-on-timeout: 120
-          command: npm run cypress:coverage
+          wait-on: 'http://localhost:5173'
 
-      - name: Create artifact directories
-        run: |
-          mkdir -p frontend/cypress/videos
-          mkdir -p frontend/cypress/screenshots
-          mkdir -p frontend/coverage
-
-      - name: Generate coverage report
+      - name: Generate Coverage Report
         working-directory: ./frontend
         run: npm run coverage:report
 
-      - name: Upload test results and coverage
+      - name: Upload Coverage and Test Results
         if: always()
         uses: actions/upload-artifact@v4
         with:

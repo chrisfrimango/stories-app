@@ -19,6 +19,7 @@
 // require('./commands')
 /// <reference types="cypress" />
 import "./commands";
+import "@cypress/code-coverage/support";
 
 import { mount } from "cypress/react18";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
