@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # Specificera version explicit istället för latest
 
     env:
       DB_HOST: localhost
@@ -38,27 +38,33 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # Uppdaterad till v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4  # Uppdaterad till v4
         with:
-          node-version: "18"
-          cache: "npm"
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: |
+            frontend/package-lock.json
+            backend/package-lock.json
 
-      - name: Install Dependencies
-        run: |
-          cd frontend && npm install
-          cd ../backend && npm install
+      # Separata install-steg för tydligare felmeddelanden
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm ci  # Använd ci istället för install för mer pålitlig installation
+
+      - name: Install Backend Dependencies
+        working-directory: ./backend
+        run: npm ci
 
       - name: Run Database Migrations
-        run: |
-          cd backend
-          npm run migrate
+        working-directory: ./backend
+        run: npm run migrate
 
       - name: Start Backend
+        working-directory: ./backend
         run: |
-          cd backend
           npm run dev &
           sleep 10
 
@@ -92,10 +98,11 @@ jobs:
 
       - name: Upload test results and coverage
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # Uppdaterad till v4
         with:
           name: test-results
           path: |
             frontend/cypress/videos/**
             frontend/cypress/screenshots/**
             frontend/coverage/**
+          retention-days: 30  # Specificera hur länge artifacts ska sparas
