@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import PostList from "../components/post/PostList";
+import PostFilter from "../components/post/PostFilter";
 import { useAuth } from "../context/authContext";
+import { FilterType } from "../types/postTypes";
 
 const Blog: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
+  const [filter, setFilter] = useState<FilterType>("all");
 
   return (
     <Container maxWidth="lg" sx={{ pt: 8, pb: 6 }}>
@@ -35,8 +38,10 @@ const Blog: React.FC = () => {
             "Stay in the loop with the latest stories"
           )}
         </Typography>
+
+        {isAuthenticated && <PostFilter value={filter} onChange={setFilter} />}
       </Box>
-      <PostList />
+      <PostList filter={filter} />
     </Container>
   );
 };

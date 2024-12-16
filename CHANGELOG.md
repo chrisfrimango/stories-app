@@ -1,6 +1,11 @@
 # CHANGELOG
 
-### 2024-12-13 feat: GitHub Actions CI/CD and Database Migrations
+### 2024-12-16 feat: post filtering
+
+- **Beskrivning**:
+  - Implementerar ny PostFilter-komponent
+
+### 2024-12-16 feat: GitHub Actions CI/CD and Database Migrations
 
 - **Beskrivning**:
   - Implementerar GitHub Actions workflow för CI/CD

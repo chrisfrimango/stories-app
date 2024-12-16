@@ -5,18 +5,42 @@ import { usePosts } from "../../hooks/usePost";
 import PostCard from "./PostCard";
 import { Loading } from "../../ui/Loading";
 import { Error } from "../../ui/Error";
+import { useAuth } from "../../context/authContext";
+import { PostListProps } from "../../types/postTypes";
 
-const PostList: React.FC = () => {
+const PostList: React.FC<PostListProps> = ({ filter = "all" }) => {
   const { data: posts, error, isLoading } = usePosts();
+  const { user } = useAuth();
 
   if (isLoading) return <Loading message="Loading posts..." />;
   if (error) return <Error message="Failed to load posts" />;
   if (!posts || posts.length === 0) return <Error message="No posts found" />;
 
+  const filteredPosts = posts.filter((post) => {
+    switch (filter) {
+      case "my-posts":
+        return post.user_id === Number(user?.id);
+      case "other-posts":
+        return post.user_id !== Number(user?.id);
+      default:
+        return true;
+    }
+  });
+
+  if (filteredPosts.length === 0) {
+    return (
+      <Error
+        message={`No ${
+          filter === "my-posts" ? "personal" : "other users'"
+        } posts found`}
+      />
+    );
+  }
+
   return (
     <Box sx={{ flexGrow: 1, margin: "0 auto", maxWidth: 1200 }}>
       <Grid container spacing={{ xs: 2, md: 3 }}>
-        {posts?.map((post, index) => {
+        {filteredPosts.map((post, index) => {
           const isFeatured = index === 0;
           const isSecondary = index === 1 || index === 2;
 
