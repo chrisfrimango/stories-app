@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-22.04  # Specificera version explicit istället för latest
+    runs-on: ubuntu-22.04
 
     env:
       DB_HOST: localhost
@@ -19,6 +19,8 @@ jobs:
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DB_NAME: ${{ secrets.DB_NAME }}
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      NODE_ENV: test
+      CI: true
 
     services:
       postgres:
@@ -38,33 +40,50 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4  # Uppdaterad till v4
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4  # Uppdaterad till v4
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: |
-            frontend/package-lock.json
-            backend/package-lock.json
+          node-version: "18"
 
-      # Separata install-steg för tydligare felmeddelanden
+      # Debug information
+      - name: Debug Info
+        run: |
+          echo "Node version: $(node -v)"
+          echo "NPM version: $(npm -v)"
+          echo "Current directory: $(pwd)"
+          ls -la
+
+      # Frontend installation with verbose logging
       - name: Install Frontend Dependencies
         working-directory: ./frontend
-        run: npm ci  # Använd ci istället för install för mer pålitlig installation
+        run: |
+          echo "Installing frontend dependencies..."
+          npm cache clean --force
+          npm install --verbose
+        continue-on-error: false
 
+      # Backend installation with verbose logging
       - name: Install Backend Dependencies
         working-directory: ./backend
-        run: npm ci
+        run: |
+          echo "Installing backend dependencies..."
+          npm cache clean --force
+          npm install --verbose
+        continue-on-error: false
 
       - name: Run Database Migrations
         working-directory: ./backend
-        run: npm run migrate
+        run: |
+          echo "Running database migrations..."
+          npm run migrate
+        continue-on-error: false
 
       - name: Start Backend
         working-directory: ./backend
         run: |
+          echo "Starting backend server..."
           npm run dev &
           sleep 10
 
@@ -98,11 +117,11 @@ jobs:
 
       - name: Upload test results and coverage
         if: always()
-        uses: actions/upload-artifact@v4  # Uppdaterad till v4
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: |
             frontend/cypress/videos/**
             frontend/cypress/screenshots/**
             frontend/coverage/**
-          retention-days: 30  # Specificera hur länge artifacts ska sparas
+          retention-days: 30
