@@ -29,6 +29,7 @@ import { AlertProvider } from "../../src/context/alertContext";
 import { AuthProvider } from "../../src/context/authContext";
 import { ModalProvider } from "../../src/context/modalContext";
 import { BrowserRouter } from "react-router-dom";
+import { GlobalStyle } from "../../src/styles/globalStyle";
 import { theme as styledTheme } from "../../src/styles/theme";
 import { muiTheme } from "../../src/styles/muiTheme";
 import React from "react";
@@ -40,7 +41,6 @@ if (typeof window === "undefined") {
 
 interface TestWrapperProps {
   children: React.ReactNode;
-  initialModalState?: Cypress.MountOptions["initialModalState"];
 }
 
 export function TestWrapper({ children }: TestWrapperProps) {
@@ -53,14 +53,20 @@ export function TestWrapper({ children }: TestWrapperProps) {
     },
   });
 
+  // Get the initial state from window
+  const modalState = (window as any).initialModalState;
+
   return (
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <MuiThemeProvider theme={muiTheme}>
           <StyledThemeProvider theme={styledTheme}>
+            <GlobalStyle />
             <AuthProvider>
               <AlertProvider>
-                <ModalProvider>{children}</ModalProvider>
+                <ModalProvider initialState={modalState}>
+                  {children}
+                </ModalProvider>
               </AlertProvider>
             </AuthProvider>
           </StyledThemeProvider>

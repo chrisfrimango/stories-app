@@ -3,10 +3,10 @@
     "id": 1,
     "title": "Test Post 1",
     "content": "This is test content 1",
-    "category": "Technology",
-    "username": "testuser",
-    "postId": "1",
+    "category_id": 1,
+    "category_name": "Technology",
     "created_at": "2024-03-20T10:00:00Z",
-    "category_name": "Technology"
+    "user_id": "1",
+    "username": "testuser"
   }
 }

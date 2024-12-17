@@ -2,15 +2,15 @@
 import EditPost from "../../../src/components/post/EditPost";
 
 describe("EditPost Component", () => {
-  // const mockPost = {
-  //   id: 1,
-  //   title: "Original Post",
-  //   content: "Original content",
-  //   category_id: 1,
-  //   username: "testuser",
-  //   created_at: "2024-03-20T10:00:00Z",
-  //   category_name: "Technology",
-  // };
+  const mockPost = {
+    id: 1,
+    title: "Test Post 1",
+    content: "This is test content 1",
+    category_id: 1,
+    username: "testuser",
+    created_at: "2024-03-20T10:00:00Z",
+    category_name: "Technology",
+  };
 
   const setupMockAuth = () => {
     cy.window().then((win) => {
@@ -23,6 +23,10 @@ describe("EditPost Component", () => {
           email: "test@example.com",
         })
       );
+      // Set the editingPost in the modal context through window
+      win.initialModalState = {
+        editingPost: mockPost,
+      };
     });
   };
 
@@ -34,7 +38,6 @@ describe("EditPost Component", () => {
       statusCode: 200,
       body: {
         categories: [
-          // Add this wrapper object to match backend response
           { id: 1, name: "Technology" },
           { id: 2, name: "Travel" },
           { id: 3, name: "Food" },
@@ -42,137 +45,111 @@ describe("EditPost Component", () => {
         ],
       },
     }).as("getCategories");
-
-    cy.intercept("GET", "**/api/posts/*", {
-      statusCode: 200,
-      fixture: "post.json",
-    }).as("getPost");
   });
 
   it("renders with pre-filled data", () => {
     cy.mount(<EditPost isOpen={true} onClose={() => {}} />);
-    cy.get('[data-testid="edit-post-modal"]').should("be.visible");
     cy.wait("@getCategories");
-    cy.wait("@getPost");
 
-    cy.get('[data-testid="post-title-input"]').should("be.visible");
-    cy.get('[data-testid="post-content-input"]').should("be.visible");
-    cy.get('[data-testid="category-select"]').should("be.visible");
+    // Verify pre-filled data
+    cy.get('[data-testid="post-title-input"]')
+      .should("be.visible")
+      .and("have.value", "Test Post 1");
+    cy.get('[data-testid="post-content-input"]')
+      .should("be.visible")
+      .and("have.value", "This is test content 1");
+    cy.get('[data-testid="category-select"]')
+      .should("be.visible")
+      .and("have.value", "1");
   });
 
-  // Verify pre-filled data
-  // cy.get('[data-testid="post-title-input"]').should(
-  //   "have.value",
-  //   mockPost.title
-  // );
-  // cy.get('[data-testid="post-content-input"]').should(
-  //   "have.value",
-  //   mockPost.content
-  // );
-  // cy.get('[data-testid="category-select"]').should(
-  //   "have.value",
-  //   mockPost.category_id.toString()
-  // );
-  // });
+  it("handles successful post update", () => {
+    // Mock successful update
+    cy.intercept("PUT", "**/api/posts/*", {
+      statusCode: 200,
+      body: {
+        post: {
+          id: 1,
+          title: "Updated Post",
+          content: "Updated content",
+          category_id: 2,
+          username: "testuser",
+          created_at: new Date().toISOString(),
+          category_name: "Travel",
+        },
+      },
+    }).as("updatePost");
 
-  // it("handles successful post update", () => {
-  //   // Mock successful update
-  //   cy.intercept("PUT", "**/api/posts/*", {
-  //     statusCode: 200,
-  //     body: {
-  //       ...mockPost,
-  //       title: "Updated Post",
-  //       content: "Updated content",
-  //       category_id: 2,
-  //     },
-  //   }).as("updatePost");
+    const onCloseSpy = cy.spy().as("onCloseSpy");
+    cy.mount(<EditPost isOpen={true} onClose={onCloseSpy} />);
+    cy.wait("@getCategories");
 
-  //   const onCloseSpy = cy.spy().as("onCloseSpy");
-  //   cy.mount(<EditPost isOpen={true} onClose={onCloseSpy} />);
-  //   cy.wait("@getCategories");
+    // Update form fields
+    cy.get('[data-testid="post-title-input"]').clear().type("Updated Post");
+    cy.get('[data-testid="post-content-input"]')
+      .clear()
+      .type("Updated content");
+    cy.get('[data-testid="category-select"]').select("2");
 
-  //   // Update form fields
-  //   cy.get('[data-testid="post-title-input"]').clear().type("Updated Post");
-  //   cy.get('[data-testid="post-content-input"]')
-  //     .clear()
-  //     .type("Updated content");
-  //   cy.get('[data-testid="category-select"]').select("Travel");
+    // Submit form
+    cy.get('[data-testid="edit-post-submit"]').click();
+    cy.wait("@updatePost");
 
-  //   // Submit form
-  //   cy.get('[data-testid="edit-post-submit"]').click();
-  //   cy.wait("@updatePost");
+    // Verify success and modal close
+    cy.get('[data-testid="alert"]')
+      .should("be.visible")
+      .and("contain", "Post edited successfully");
+    cy.get("@onCloseSpy").should("have.been.called");
 
-  //   // Verify success and modal close
-  //   cy.get('[data-testid="success-message"]').should("be.visible");
-  //   cy.get("@onCloseSpy").should("have.been.called");
-  // });
+    // check the new post is in the database
+  });
 
-  // it("validates required fields", () => {
-  //   cy.mount(<EditPost isOpen={true} onClose={() => {}} />);
-  //   cy.wait("@getCategories");
+  it("validates required fields", () => {
+    cy.mount(<EditPost isOpen={true} onClose={() => {}} />);
+    cy.wait("@getCategories");
 
-  //   // Clear required fields
-  //   cy.get('[data-testid="post-title-input"]').clear();
-  //   cy.get('[data-testid="post-content-input"]').clear();
+    // Clear required fields
+    cy.get('[data-testid="post-title-input"]').clear();
+    cy.get('[data-testid="post-content-input"]').clear();
 
-  //   // Try to submit
-  //   cy.get('[data-testid="edit-post-submit"]').click();
+    // Try to submit
+    cy.get('[data-testid="edit-post-submit"]').click();
 
-  //   // Check validation messages
-  //   cy.get('[data-testid="title-error"]').should("be.visible");
-  //   cy.get('[data-testid="content-error"]').should("be.visible");
-  // });
+    // Check validation messages
+    cy.get('[data-testid="error-message"]').should(
+      "contain",
+      "Title must be at least 3 characters"
+    );
+    cy.get('[data-testid="error-message"]').should(
+      "contain",
+      "Content must be at least 10 characters"
+    );
+  });
 
-  // it("handles API errors", () => {
-  //   // Mock failed update
-  //   cy.intercept("PUT", "**/api/posts/*", {
-  //     statusCode: 400,
-  //     body: { message: "Update failed" },
-  //   }).as("updatePostError");
+  it("handles API errors", () => {
+    // Mock failed update
+    cy.intercept("PUT", "**/api/posts/*", {
+      statusCode: 400,
+      body: { message: "Failed to update post" },
+    }).as("updatePostError");
 
-  //   cy.mount(<EditPost isOpen={true} onClose={() => {}} />);
-  //   cy.wait("@getCategories");
+    cy.mount(<EditPost isOpen={true} onClose={() => {}} />);
+    cy.wait("@getCategories");
 
-  //   // Make a small change and submit
-  //   cy.get('[data-testid="post-title-input"]').clear().type("Updated Title");
-  //   cy.get('[data-testid="edit-post-submit"]').click();
-  //   cy.wait("@updatePostError");
+    cy.get('[data-testid="edit-post-submit"]').click();
+    cy.wait("@updatePostError");
 
-  //   // Verify error message
-  //   cy.get('[data-testid="error-message"]')
-  //     .should("be.visible")
-  //     .and("contain", "Update failed");
-  // });
+    cy.get('[data-testid="alert"]')
+      .should("be.visible")
+      .and("contain", "Failed to edit post");
+  });
 
-  // it("handles category loading error", () => {
-  //   cy.intercept("GET", "**/api/categories", {
-  //     statusCode: 500,
-  //     body: { message: "Failed to load categories" },
-  //   }).as("getCategoriesError");
+  it("closes modal when cancel is clicked", () => {
+    const onCloseSpy = cy.spy().as("onCloseSpy");
+    cy.mount(<EditPost isOpen={true} onClose={onCloseSpy} />);
+    cy.wait("@getCategories");
 
-  //   cy.mount(<EditPost isOpen={true} onClose={() => {}} />);
-  //   cy.wait("@getCategoriesError");
-
-  //   cy.get('[data-testid="error-message"]')
-  //     .should("be.visible")
-  //     .and("contain", "Failed to load categories");
-  // });
-
-  // it("preserves original data when cancelling", () => {
-  //   const onCloseSpy = cy.spy().as("onCloseSpy");
-  //   cy.mount(<EditPost isOpen={true} onClose={onCloseSpy} />);
-  //   cy.wait("@getCategories");
-
-  //   // Make changes without saving
-  //   cy.get('[data-testid="post-title-input"]').clear().type("Unsaved changes");
-  //   cy.get('[data-testid="post-content-input"]')
-  //     .clear()
-  //     .type("Unsaved content");
-
-  //   // Click cancel
-  //   cy.get('[data-testid="edit-post-cancel"]').click();
-
-  //   // Verify modal closes without saving
-  //   cy.get("@onCloseSpy").should("have.been.called");
-  // });
+    cy.get('[data-testid="edit-post-cancel"]').click();
+    cy.get("@onCloseSpy").should("have.been.called");
+  });
 });

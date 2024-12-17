@@ -7,6 +7,7 @@ import { EditPostModalProps } from "../../types/postsTypes";
 import { useAlert } from "../../context/alertContext";
 import { useEditPost, useCategories } from "../../hooks/usePost";
 import { useModal } from "../../context/modalContext";
+import { Error } from "../../ui/Error";
 
 const Overlay = styled.div`
   position: fixed;
@@ -177,7 +178,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ isOpen, onClose }) => {
               data-testid="post-title-input"
               placeholder="Title"
             />
-            {errors.title && <span>{errors.title.message}</span>}
+            {errors.title && <Error message={errors.title.message} />}
           </FormGroup>
 
           <FormGroup>
@@ -186,7 +187,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ isOpen, onClose }) => {
               data-testid="post-content-input"
               placeholder="Content"
             />
-            {errors.content && <span>{errors.content.message}</span>}
+            {errors.content && <Error message={errors.content.message} />}
           </FormGroup>
 
           <FormGroup>
@@ -200,7 +201,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ isOpen, onClose }) => {
                 </option>
               ))}
             </Select>
-            {errors.category && <span>{errors.category.message}</span>}
+            {errors.category && <Error message={errors.category.message} />}
           </FormGroup>
 
           <ButtonGroup>

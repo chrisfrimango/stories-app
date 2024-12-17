@@ -73,13 +73,64 @@ describe("PostDetail Component", () => {
       .should("be.visible")
       .and("contain", "Failed to load post");
   });
-
   it("opens edit modal when edit button is clicked", () => {
+    // Mock the post data in fixture
+    cy.intercept("GET", "**/api/posts/*", {
+      statusCode: 200,
+      body: {
+        post: {
+          id: 1,
+          title: "Test Post 1",
+          content: "This is test content 1",
+          category_id: 1,
+          category_name: "Technology",
+          created_at: "2024-03-20T10:00:00Z",
+          user_id: "1",
+          username: "testuser",
+        },
+      },
+    }).as("getPost");
+
+    // Mock categories API
+    cy.intercept("GET", "**/api/categories", {
+      statusCode: 200,
+      body: {
+        categories: [
+          { id: 1, name: "Technology" },
+          { id: 2, name: "Travel" },
+          { id: 3, name: "Food" },
+          { id: 4, name: "Lifestyle" },
+        ],
+      },
+    }).as("getCategories");
+
+    // Mount component
     cy.mount(<PostDetail />);
     cy.wait("@getPost");
 
-    cy.get('[data-testid="edit-button"]').click();
-    cy.get('[data-testid="edit-post-modal"]').should("be.visible");
+    // Verify edit button exists and click it
+    cy.get('[data-testid="edit-button"]').should("be.visible").click();
+
+    // Wait for categories to load after clicking edit
+
+    // First check if modal exists
+    cy.get('[data-testid="edit-post-modal"]').should("exist");
+    cy.wait("@getCategories");
+
+    // Then check visibility and content
+    cy.get('[data-testid="edit-post-modal"]')
+      .should("be.visible")
+      .within(() => {
+        cy.get('[data-testid="post-title-input"]')
+          .should("exist")
+          .and("be.visible");
+        cy.get('[data-testid="post-content-input"]')
+          .should("exist")
+          .and("be.visible");
+        cy.get('[data-testid="category-select"]')
+          .should("exist")
+          .and("be.visible");
+      });
   });
 
   it("handles post deletion", () => {
