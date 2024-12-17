@@ -54,6 +54,7 @@ const EditProfile: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) => {
   }, [editingProfile, reset]);
 
   const onSubmit = (data: ProfileInput) => {
+    console.log("Submitting data:", data);
     updateProfile.mutate(data, {
       onSuccess: () => {
         showAlert("Profile updated successfully", "success");
