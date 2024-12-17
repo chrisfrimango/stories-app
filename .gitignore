@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 
 .env
+
+# Coverage directory
+/frontend/coverage/
+/frontend/.nyc_output/

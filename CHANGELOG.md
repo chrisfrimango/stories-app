@@ -1,5 +1,10 @@
 # CHANGELOG
 
+### 2024-12-17 fix: Github action
+
+- **Beskrivning**:
+  - Implementerar CI/CD Github action
+
 ### 2024-12-16 feat: post filtering
 
 - **Beskrivning**:
