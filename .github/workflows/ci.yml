@@ -52,6 +52,11 @@ jobs:
         run: |
           npm ci
 
+      - name: Build Frontend
+        working-directory: ./frontend
+        run: |
+          npm run build -- --mode test
+
       - name: Install Backend Dependencies
         working-directory: ./backend
         run: |

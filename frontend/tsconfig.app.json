@@ -8,7 +8,8 @@
     "types": ["cypress", "@badeball/cypress-cucumber-preprocessor"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "src/*": ["src/*"]
     },
 
     /* Bundler mode */
