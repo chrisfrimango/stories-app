@@ -5,7 +5,7 @@ import { usePosts } from "../../hooks/usePost";
 import PostCard from "./PostCard";
 import { Loading } from "../../ui/Loading";
 import { Error } from "../../ui/Error";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../../context/auth";
 import { PostListProps } from "../../types/postTypes";
 
 const PostList: React.FC<PostListProps> = ({ filter = "all" }) => {

@@ -12,8 +12,8 @@ import {
 import { usePost, useDeletePost } from "../hooks/usePost";
 import { Loading } from "../ui/Loading";
 import { Error } from "../ui/Error";
-import { useAuth } from "../context/authContext";
-import { useModal } from "../context/modalContext";
+import { useAuth } from "../context/auth";
+import { useModal } from "../context/modal";
 
 const PostDetail: React.FC = () => {
   const { isAuthenticated, user } = useAuth();

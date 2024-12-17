@@ -32,3 +32,17 @@ export interface RegisterResponse {
     username: string;
   };
 }
+
+export interface UserSession {
+  id: string;
+  email: string;
+  username: string;
+}
+
+export interface AuthContextType {
+  isAuthenticated: boolean;
+  user: UserSession | null;
+  login: (token: string, userData: UserSession) => void;
+  logout: () => void;
+  isLoading: boolean;
+}

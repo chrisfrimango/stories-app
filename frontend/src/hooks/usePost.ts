@@ -8,7 +8,7 @@ import {
 import { api } from "../services/authService";
 import { PostFormData } from "../validation/schema";
 import { UserProfile } from "../types/userTypes";
-import { useAlert } from "../context/alertContext";
+import { useAlert } from "../context/alert";
 import { useNavigate } from "react-router-dom";
 
 export const postApi = {
@@ -55,7 +55,7 @@ export function usePost(id: string) {
   return useQuery({
     queryKey: ["post", id],
     queryFn: () => postApi.fetchById(id),
-    select: (data: Post) => data.post,
+    select: (data: Post) => data,
   });
 }
 

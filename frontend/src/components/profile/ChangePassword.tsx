@@ -3,10 +3,10 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useChangePassword } from "../../hooks/useProfile";
-import { useAlert } from "../../context/alertContext";
+import { useAlert } from "../../context/alert";
 import { PasswordInput, passwordSchema } from "../../validation/schema";
 import { Error } from "../../ui/Error";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../../context/auth";
 
 const Overlay = styled.div`
   position: fixed;

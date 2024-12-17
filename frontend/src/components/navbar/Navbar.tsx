@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, MenuItem, useMediaQuery, useTheme } from "@mui/material";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../../context/auth";
 import { NavBarProps } from "../../types/layoutTypes";
 import CreatePostButton from "../common/CreatePostButton";
 

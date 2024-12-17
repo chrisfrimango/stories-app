@@ -18,9 +18,13 @@ declare module "styled-components" {
       heading: string;
     };
     breakpoints: {
-      mobile: string;
-      tablet: string;
-      desktop: string;
+      values: {
+        xs: number;
+        sm: number;
+        md: number;
+        lg: number;
+        xl: number;
+      };
     };
   }
 }

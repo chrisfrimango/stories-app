@@ -27,7 +27,7 @@ export const getAllPosts = async (
 
 export const getPostById = async (
   req: Request,
-  res: Response<{ post: PostResponse } | ErrorResponse>
+  res: Response<PostResponse | ErrorResponse>
 ): Promise<void> => {
   try {
     const { id } = req.params;
@@ -45,7 +45,7 @@ export const getPostById = async (
       return;
     }
 
-    res.json({ post: result.rows[0] });
+    res.json(result.rows[0]);
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch post" });
   }

@@ -6,9 +6,9 @@ import { useNavigate } from "react-router-dom";
 import { PostFormData, postSchema } from "../../validation/schema";
 import { CreatePostModalProps } from "../../types/postsTypes";
 import { useCreatePost } from "../../hooks/usePost";
-import { useAlert } from "../../context/alertContext";
+import { useAlert } from "../../context/alert";
 import { useCategories } from "../../hooks/usePost";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../../context/auth";
 import { Error } from "../../ui/Error";
 
 const Overlay = styled.div`

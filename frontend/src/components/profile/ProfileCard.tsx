@@ -10,11 +10,11 @@ import {
   CardActions,
   Button,
 } from "@mui/material";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../../context/auth";
 import { Loading } from "../../ui/Loading";
 import { Error } from "../../ui/Error";
-import { useModal } from "../../context/modalContext";
-import { useAlert } from "../../context/alertContext";
+import { useModal } from "../../context/modal";
+import { useAlert } from "../../context/alert";
 import { useDeleteProfile } from "../../hooks/useProfile";
 
 const ProfileCard: React.FC = () => {

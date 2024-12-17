@@ -1,7 +1,7 @@
 import React from "react";
 import ProfileCard from "../components/profile/ProfileCard";
 import { Container } from "@mui/material";
-import { useAuth } from "../context/authContext";
+import { useAuth } from "../context/auth";
 import { Navigate } from "react-router-dom";
 
 const Profile: React.FC = () => {

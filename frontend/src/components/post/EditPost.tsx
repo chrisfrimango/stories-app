@@ -4,9 +4,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PostFormData, postSchema } from "../../validation/schema";
 import { EditPostModalProps } from "../../types/postsTypes";
-import { useAlert } from "../../context/alertContext";
+import { useAlert } from "../../context/alert";
 import { useEditPost, useCategories } from "../../hooks/usePost";
-import { useModal } from "../../context/modalContext";
+import { useModal } from "../../context/modal";
 import { Error } from "../../ui/Error";
 
 const Overlay = styled.div`

@@ -5,9 +5,9 @@ import { styled } from "styled-components";
 import { Outlet } from "react-router-dom";
 import NavBar from "../navbar/Navbar";
 import CreatePostModal from "../post/CreatePost";
-import { AlertProvider } from "../../context/alertContext";
+import { AlertProvider } from "../../context/alert";
 import EditPostModal from "../post/EditPost";
-import { useModal } from "../../context/modalContext";
+import { useModal } from "../../context/modal";
 import EditProfile from "../profile/EditProfile";
 import ChangePassword from "../profile/ChangePassword";
 

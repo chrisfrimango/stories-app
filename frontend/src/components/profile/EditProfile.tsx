@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useModal } from "../../context/modalContext";
+import { useModal } from "../../context/modal";
 import { useUpdateProfile } from "../../hooks/useProfile";
-import { useAlert } from "../../context/alertContext";
+import { useAlert } from "../../context/alert";
 import { ProfileInput, profileSchema } from "../../validation/schema";
 import { EditProfileModalProps } from "../../types/userTypes";
 import {

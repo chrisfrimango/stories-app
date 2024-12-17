@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import PostList from "../components/post/PostList";
 import PostFilter from "../components/post/PostFilter";
-import { useAuth } from "../context/authContext";
+import { useAuth } from "../context/auth";
 import { FilterType } from "../types/postTypes";
 
 const Blog: React.FC = () => {

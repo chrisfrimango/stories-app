@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginInput } from "../validation/schema";
 import { authService } from "../services/authService";
-import { useAuth } from "../context/authContext";
+import { useAuth } from "../context/auth";
 
 const LoginContainer = styled.div`
   min-height: 100vh;

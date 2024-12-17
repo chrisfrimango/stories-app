@@ -1,8 +1,7 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { useState } from "react";
 import { Alert } from "@mui/material";
-import { AlertState, AlertContextType } from "../types/layoutTypes";
-
-const AlertContext = createContext<AlertContextType | undefined>(undefined);
+import { AlertContext } from "./context";
+import { AlertState } from "../../types/alertTypes";
 
 export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -37,12 +36,4 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({
       )}
     </AlertContext.Provider>
   );
-};
-
-export const useAlert = () => {
-  const context = useContext(AlertContext);
-  if (context === undefined) {
-    throw new Error("useAlert must be used within an AlertProvider");
-  }
-  return context;
 };

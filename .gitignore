@@ -28,3 +28,6 @@ dist-ssr
 # Coverage directory
 /frontend/coverage/
 /frontend/.nyc_output/
+
+# Old files
+old_files/

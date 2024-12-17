@@ -1,30 +1,8 @@
-import React, { createContext, useContext, useState } from "react";
-import { authService } from "../services/authService";
+import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-
-interface UserSession {
-  id: string;
-  email: string;
-  username: string;
-}
-
-interface AuthContextType {
-  isAuthenticated: boolean;
-  user: UserSession | null;
-  login: (token: string, userData: UserSession) => void;
-  logout: () => void;
-  isLoading: boolean;
-}
-
-const AuthContext = createContext<AuthContextType | null>(null);
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
+import { AuthContext } from "./context";
+import { UserSession } from "../../types/authTypes";
+import { authService } from "../../services/authService";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -34,7 +12,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     authService.isAuthenticated()
   );
   const [isLoading, setIsLoading] = useState(false);
-
   const [user, setUser] = useState<UserSession | null>(() => {
     const userData = localStorage.getItem("user_data");
     return userData ? JSON.parse(userData) : null;

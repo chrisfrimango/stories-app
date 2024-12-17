@@ -6,11 +6,11 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import { CardActionArea, Link } from "@mui/material";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../../context/auth";
 import { PostCardProps } from "../../types/postsTypes";
 import { theme } from "../../styles/theme";
 import { useDeletePost } from "../../hooks/usePost";
-import { useModal } from "../../context/modalContext";
+import { useModal } from "../../context/modal";
 
 const StyledCard = styled(Card)({
   height: "100%",
