@@ -3,7 +3,8 @@ import Layout from "../components/layout/Layout";
 import { AuthenticatedRoutes } from "./AuthenticatedRoutes";
 import { PublicRoutes } from "./PublicRoute";
 import { Home, Login, Register } from "./lazyComponents";
-
+import { Loading } from "../ui/Loading";
+import { Suspense } from "react";
 
 export const router = createBrowserRouter([
   {
@@ -15,15 +16,27 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "/",
-            element: <Home />,
+            element: (
+              <Suspense fallback={<Loading message="Loading home..." />}>
+                <Home />
+              </Suspense>
+            ),
           },
           {
             path: "/login",
-            element: <Login />,
+            element: (
+              <Suspense fallback={<Loading message="Loading login..." />}>
+                <Login />
+              </Suspense>
+            ),
           },
           {
             path: "/register",
-            element: <Register />,
+            element: (
+              <Suspense fallback={<Loading message="Loading register..." />}>
+                <Register />
+              </Suspense>
+            ),
           },
         ],
       },

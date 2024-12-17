@@ -21,6 +21,7 @@ Given("I am logged in as {string}", (username: string) => {
 
 Given("I am on the blog page", () => {
   cy.url().should("include", "/blog");
+  cy.get('[data-testid="create-post-button"]').should("be.visible");
 });
 
 When("I click the {string} button", (buttonText: string) => {

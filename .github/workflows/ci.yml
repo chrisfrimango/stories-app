@@ -90,6 +90,7 @@ jobs:
           browser: chrome
           start: npm run dev
           wait-on: "http://localhost:5173"
+          wait-on-timeout: 120
 
       - name: Generate Coverage Report
         working-directory: ./frontend

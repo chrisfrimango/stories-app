@@ -42,6 +42,11 @@ Cypress.Commands.add("login", (email: string, password: string) => {
 Cypress.Commands.add("loginViaUI", (email: string, password: string) => {
   cy.visit("/login");
 
+  // Add waiting for the page to load
+  cy.get('[data-testid="email-input"]', { timeout: 10000 }).should(
+    "be.visible"
+  );
+
   cy.fixture("users.json").then((userData) => {
     cy.intercept("POST", `${Cypress.env("API_URL")}/users/login`, {
       statusCode: 200,
