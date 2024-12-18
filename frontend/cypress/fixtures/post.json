@@ -1,12 +1,10 @@
 {
-  "post": {
-    "id": 1,
-    "title": "Test Post 1",
-    "content": "This is test content 1",
-    "category_id": 1,
-    "category_name": "Technology",
-    "created_at": "2024-03-20T10:00:00Z",
-    "user_id": "1",
-    "username": "testuser"
-  }
+  "id": 1,
+  "title": "Test Post 1",
+  "content": "This is test content 1",
+  "category_id": 1,
+  "category_name": "Technology",
+  "created_at": "2024-03-20T10:00:00Z",
+  "user_id": "1",
+  "username": "testuser"
 }
