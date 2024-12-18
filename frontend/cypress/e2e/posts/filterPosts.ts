@@ -30,10 +30,17 @@ Given("I have the following posts:", (dataTable: DataTable) => {
 
   cy.visit("/blog");
   cy.wait("@getPosts");
+  cy.get('[data-testid="post-card"]').should("exist");
 });
 
 When("I click the {string} filter button", (filterType: string) => {
+  // Wait for initial posts to load
+
+  // Click the filter button
   cy.get(`[data-testid="filter-${filterType}"]`).click();
+
+  // Wait for filtered posts to be visible
+  cy.get('[data-testid="post-card"]').should("exist");
 });
 
 Then("I should only see posts by {string}", (author: string) => {
@@ -41,11 +48,11 @@ Then("I should only see posts by {string}", (author: string) => {
     if (author === "me") {
       cy.wrap($card)
         .find('[data-testid="post-author"]')
-        .should("have.text", "testuser");
+        .should("have.text", "By testuser");
     } else {
       cy.wrap($card)
         .find('[data-testid="post-author"]')
-        .should("not.have.text", "testuser");
+        .should("not.have.text", "By testuser");
     }
   });
 });

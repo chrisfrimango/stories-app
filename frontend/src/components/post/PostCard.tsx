@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -11,6 +11,7 @@ import { PostCardProps } from "../../types/postsTypes";
 import { theme } from "../../styles/theme";
 import { useDeletePost } from "../../hooks/usePost";
 import { useModal } from "../../context/modal";
+import { getCategoryImage } from "../../services/unsplashService";
 
 const StyledCard = styled(Card)({
   height: "100%",
@@ -58,6 +59,9 @@ const PostCard: React.FC<PostCardProps> = ({
   const { handleDelete, isDeleting } = useDeletePost({
     postId: post.id.toString(),
   });
+  const [imageUrl, setImageUrl] = useState<string | null>(
+    "https://placehold.co/400"
+  );
 
   const handleClick = () => {
     if (isAuthenticated && user?.username) {
@@ -71,13 +75,22 @@ const PostCard: React.FC<PostCardProps> = ({
     }
   };
 
+  useEffect(() => {
+    const loadImage = async () => {
+      const url = await getCategoryImage(post.category_name || "default");
+      setImageUrl(url);
+    };
+
+    loadImage();
+  }, [post.category_name]);
+
   return (
     <StyledCard data-testid="post-card">
       <StyledCardActionArea onClick={handleClick}>
         <CardMedia
           component="img"
           height={heightOverride || 200}
-          image={post.image_url || "https://placehold.co/400"}
+          image={imageUrl || "https://placehold.co/400"}
           alt={post.title}
           sx={{
             height: heightOverride || 200,

@@ -63,16 +63,14 @@ When("I fill in the following post details:", (dataTable: DataTable) => {
   cy.intercept("GET", "**/api/posts/1", {
     statusCode: 200,
     body: {
-      post: {
-        id: 1,
-        title: formData.title,
-        content: formData.content,
-        category_id: 1,
-        category_name: formData.category,
-        created_at: new Date().toISOString(),
-        user_id: "1",
-        username: "testuser",
-      },
+      id: 1,
+      title: formData.title,
+      content: formData.content,
+      category_id: 1,
+      category_name: formData.category,
+      created_at: new Date().toISOString(),
+      user_id: "1",
+      username: "testuser",
     },
   }).as("getPost");
 

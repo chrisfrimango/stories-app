@@ -1,5 +1,10 @@
 # CHANGELOG
 
+### 2024-12-18 fix: Github action
+
+- **Beskrivning**:
+  - Fix och debuggging av CI/CD Github action
+
 ### 2024-12-17 fix: Github action
 
 - **Beskrivning**:
