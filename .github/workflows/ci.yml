@@ -103,6 +103,12 @@ jobs:
               "video": false,
               "screenshotOnRunFailure": true
             }
+
+      - name: Kill frontend server
+        run: |
+          echo "Killing processes on port 5173..."
+          sudo lsof -t -i:5173 | xargs -r kill -9 || true
+
       - name: Run Cypress E2E Tests
         uses: cypress-io/github-action@v6
         with:
