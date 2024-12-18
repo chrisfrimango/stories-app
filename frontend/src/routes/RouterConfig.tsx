@@ -1,10 +1,14 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Layout } from "../components/layout";
+import Layout from "../components/layout/Layout";
 import { AuthenticatedRoutes } from "./AuthenticatedRoutes";
 import { PublicRoutes } from "./PublicRoute";
-import { Home, Login, Register } from "./LazyComponents";
-import { Loading } from "../ui/Loading";
 import { Suspense } from "react";
+import { Loading } from "../ui/Loading";
+import { lazy } from "react";
+
+const Home = lazy(() => import("../pages/Home"));
+const Login = lazy(() => import("../pages/Login"));
+const Register = lazy(() => import("../pages/Register"));
 
 export const router = createBrowserRouter([
   {
