@@ -93,10 +93,12 @@ jobs:
           start: npm run dev
           wait-on: "http://localhost:5173"
           wait-on-timeout: 120000
-          config: |
+          config: >-
             {
-              "retries": { "runMode": 2, "openMode": 0 },
-
+              "retries": 2,
+              "video": false,
+              "screenshotOnRunFailure": true
+            }
       - name: Run Cypress E2E Tests
         uses: cypress-io/github-action@v6
         with:
@@ -105,18 +107,29 @@ jobs:
           start: npm run dev
           wait-on: "http://localhost:5173, http://localhost:3000/api/health"
           wait-on-timeout: 120000
-          config: |
+          config: >-
             {
-              "retries": { "runMode": 2, "openMode": 0 },
+              "retries": 2,
               "video": false,
-              "defaultCommandTimeout": 10000,
-              "pageLoadTimeout": 30000
+              "screenshotOnRunFailure": true
             }
+
+      # Lägg till detta steg för att skapa .nyc_output-mappen
+      - name: Setup Coverage Directory
+        working-directory: ./frontend
+        run: |
+          mkdir -p .nyc_output
+          touch .nyc_output/.gitkeep
 
       - name: Generate Coverage Report
         if: always()
         working-directory: ./frontend
-        run: npm run coverage:report
+        run: |
+          if [ -d ".nyc_output" ]; then
+            npm run coverage:report
+          else
+            echo "No coverage data found"
+          fi
 
       - name: Upload Coverage and Test Results
         if: always()
