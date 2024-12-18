@@ -71,6 +71,8 @@ jobs:
             **/node_modules
             ~/.cache/Cypress
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-modules-
 
       - name: Install Frontend Dependencies
         working-directory: ./frontend
@@ -78,10 +80,6 @@ jobs:
           npm ci
           echo "Clearing port 5173..."
           sudo lsof -t -i:5173 | xargs -r kill -9 || true
-
-      - name: Build Frontend
-        working-directory: ./frontend
-        run: npm run build
 
       - name: Install Backend Dependencies
         working-directory: ./backend
@@ -129,6 +127,7 @@ jobs:
         with:
           working-directory: ./frontend
           browser: chrome
+          build: npm run build
           start: npm run test:e2e:ci
           wait-on: "http://localhost:5173, http://localhost:3000/api/health"
           wait-on-timeout: 120000
