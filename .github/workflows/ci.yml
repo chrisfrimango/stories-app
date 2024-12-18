@@ -51,11 +51,17 @@ jobs:
         working-directory: ./frontend
         run: |
           echo "File content check..."
-          cat src/routes/RouterConfig
+          cat src/routes/RouterConfig.tsx
           echo "\nFile exists check..."
-          test -f src/components/layout/Layout && echo "Layout file exists" || echo "Layout file missing"
+          test -f src/components/layout/Layout.tsx && echo "Layout file exists" || echo "Layout file missing"
           echo "\nDirectory structure..."
           tree src/components
+          echo "\nCurrent working directory:"
+          pwd
+          echo "\nList all files in src/routes:"
+          ls -la src/routes/
+          echo "\nList all files in src/components/layout:"
+          ls -la src/components/layout/
 
       # Add cache for npm dependencies
       - name: Cache dependencies
