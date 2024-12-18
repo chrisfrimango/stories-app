@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
+tsconfig.app.buildinfo
+tsconfig.node.buildinfo
 
 # Editor directories and files
 .vscode/*
@@ -28,6 +30,3 @@ dist-ssr
 # Coverage directory
 /frontend/coverage/
 /frontend/.nyc_output/
-
-# Old files
-old_files/

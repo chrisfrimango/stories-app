@@ -29,9 +29,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": [
-    "src",
-    "../old_files/modalContext.tsx",
-    "../old_files/alertContext.tsx"
-  ]
+  "include": ["src"]
 }
