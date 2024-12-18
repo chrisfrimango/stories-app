@@ -60,6 +60,8 @@ jobs:
         working-directory: ./frontend
         run: |
           npm ci
+          echo "Clearing port 5173..."
+          sudo lsof -t -i:5173 | xargs -r kill -9 || true
 
       # - name: Build Frontend
       #   working-directory: ./frontend
@@ -82,7 +84,9 @@ jobs:
         working-directory: ./backend
         run: |
           npm run dev &
+          echo "Waiting for backend..."
           npx wait-on http://localhost:3000/api/health --timeout 30000
+          curl -v http://localhost:3000/api/health || exit 1
 
       - name: Run Cypress Component Tests
         uses: cypress-io/github-action@v6
@@ -104,7 +108,7 @@ jobs:
         with:
           working-directory: ./frontend
           browser: chrome
-          start: npm run dev
+          start: npm run test:e2e:ci
           wait-on: "http://localhost:5173, http://localhost:3000/api/health"
           wait-on-timeout: 120000
           config: >-
