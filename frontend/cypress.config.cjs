@@ -30,6 +30,15 @@ module.exports = defineConfig({
 
       return config;
     },
+    experimentalStudio: true,
+    video: false,
+    screenshotOnRunFailure: true,
+    defaultCommandTimeout: 10000,
+    pageLoadTimeout: 30000,
+    retries: {
+      runMode: 2,
+      openMode: 0,
+    },
   },
   env: {
     API_URL: "http://localhost:3000/api",

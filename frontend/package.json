@@ -9,10 +9,9 @@
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "lint": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "preview": "vite preview",
-    "cypress:component": "cypress run --component",
-    "cypress:e2e": "cypress run --e2e",
-    "test:component": "start-server-and-test 'vite dev --port 5173' http://localhost:5173 'cypress run --component'",
-    "test:e2e": "start-server-and-test 'vite dev --port 5173' http://localhost:5173 'cypress run --e2e'",
+    "test:component": "cypress run --component",
+    "test:e2e": "cypress run --e2e",
+    "test:e2e:ci": "start-server-and-test dev http://localhost:5173 'cypress run --e2e'",
     "coverage:report": "nyc report --reporter=text --reporter=html"
   },
   "dependencies": {

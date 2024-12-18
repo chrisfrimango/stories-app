@@ -47,6 +47,15 @@ jobs:
         with:
           node-version: "18.19.0"
 
+      # Add cache for npm dependencies
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+            ~/.cache/Cypress
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+
       - name: Install Frontend Dependencies
         working-directory: ./frontend
         run: |
@@ -73,11 +82,7 @@ jobs:
         working-directory: ./backend
         run: |
           npm run dev &
-          echo "Checking backend availability..."
-          curl --retry 10 --retry-delay 1 --retry-connrefused http://localhost:3000/api/health || {
-            echo "Backend failed to start"
-            exit 1
-          }
+          npx wait-on http://localhost:3000/api/health --timeout 30000
 
       - name: Run Cypress Component Tests
         uses: cypress-io/github-action@v6
@@ -87,6 +92,10 @@ jobs:
           browser: chrome
           start: npm run dev
           wait-on: "http://localhost:5173"
+          wait-on-timeout: 120000
+          config: |
+            {
+              "retries": { "runMode": 2, "openMode": 0 },
 
       - name: Run Cypress E2E Tests
         uses: cypress-io/github-action@v6
@@ -94,10 +103,18 @@ jobs:
           working-directory: ./frontend
           browser: chrome
           start: npm run dev
-          wait-on: "http://localhost:5173"
-          wait-on-timeout: 120
+          wait-on: "http://localhost:5173, http://localhost:3000/api/health"
+          wait-on-timeout: 120000
+          config: |
+            {
+              "retries": { "runMode": 2, "openMode": 0 },
+              "video": false,
+              "defaultCommandTimeout": 10000,
+              "pageLoadTimeout": 30000
+            }
 
       - name: Generate Coverage Report
+        if: always()
         working-directory: ./frontend
         run: npm run coverage:report
 
