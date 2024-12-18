@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import Layout from "../components/Layout/Layout";
+import { Layout } from "../components/layout";
 import { AuthenticatedRoutes } from "./AuthenticatedRoutes";
 import { PublicRoutes } from "./PublicRoute";
 import { Home, Login, Register } from "./LazyComponents";

@@ -18,3 +18,9 @@ export interface AlertState {
 export interface AlertContextType {
   showAlert: (message: string, severity: "success" | "error") => void;
 }
+
+export interface PageComponents {
+  Home: React.ComponentType;
+  Login: React.ComponentType;
+  Register: React.ComponentType;
+}
