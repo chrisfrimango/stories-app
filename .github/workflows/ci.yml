@@ -79,10 +79,9 @@ jobs:
           echo "Clearing port 5173..."
           sudo lsof -t -i:5173 | xargs -r kill -9 || true
 
-      # - name: Build Frontend
-      #   working-directory: ./frontend
-      #   run: |
-      #     npm run build -- --mode test
+      - name: Build Frontend
+        working-directory: ./frontend
+        run: npm run build
 
       - name: Install Backend Dependencies
         working-directory: ./backend
@@ -140,7 +139,6 @@ jobs:
               "screenshotOnRunFailure": true
             }
 
-      # Lägg till detta steg för att skapa .nyc_output-mappen
       - name: Setup Coverage Directory
         working-directory: ./frontend
         run: |
