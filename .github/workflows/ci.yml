@@ -47,6 +47,16 @@ jobs:
         with:
           node-version: "18.19.0"
 
+      - name: Debug Build Issues
+        working-directory: ./frontend
+        run: |
+          echo "File content check..."
+          cat src/routes/RouterConfig
+          echo "\nFile exists check..."
+          test -f src/components/layout/Layout && echo "Layout file exists" || echo "Layout file missing"
+          echo "\nDirectory structure..."
+          tree src/components
+
       # Add cache for npm dependencies
       - name: Cache dependencies
         uses: actions/cache@v3
