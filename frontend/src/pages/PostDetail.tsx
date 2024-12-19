@@ -8,6 +8,8 @@ import {
   Divider,
   CardActions,
   Button,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import { usePost, useDeletePost } from "../hooks/usePost";
 import { Loading } from "../ui/Loading";
@@ -16,6 +18,10 @@ import { useAuth } from "../context/auth";
 import { useModal } from "../context/modal";
 
 const PostDetail: React.FC = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("md"));
+
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -34,19 +40,25 @@ const PostDetail: React.FC = () => {
     <Container
       maxWidth="md"
       sx={{
-        py: 4,
-        height: "100%",
+        py: { xs: 2, sm: 3, md: 4 },
+        px: { xs: 2, sm: 3, md: 4 },
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
       }}
       data-testid="post-detail-card"
     >
-      <Box sx={{ display: "flex", justifyContent: "flex-start", mb: 4 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-start",
+          mb: { xs: 2, sm: 3, md: 4 },
+        }}
+      >
         <Button
           variant="contained"
-          size="small"
+          size={isMobile ? "medium" : "small"}
           onClick={() => navigate("/blog")}
+          fullWidth={isMobile}
         >
           Back to Blog
         </Button>
@@ -54,17 +66,25 @@ const PostDetail: React.FC = () => {
       <Paper
         elevation={3}
         sx={{
-          p: 4,
+          p: { xs: 2, sm: 3, md: 4 },
           borderRadius: 2,
-          height: "100%",
+          flex: 1,
         }}
       >
-        <Box component="header" sx={{ mb: 4 }}>
+        <Box component="header" sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
           <Typography
-            variant="h2"
+            variant={isMobile ? "h4" : isTablet ? "h3" : "h2"}
             component="h1"
             gutterBottom
             data-testid="post-title"
+            sx={{
+              fontSize: {
+                xs: "1.75rem",
+                sm: "2.25rem",
+                md: "3rem",
+              },
+              wordBreak: "break-word",
+            }}
           >
             {post.title}
           </Typography>
@@ -72,7 +92,10 @@ const PostDetail: React.FC = () => {
           <Box
             sx={{
               display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              gap: { xs: 1, sm: 0 },
               justifyContent: "space-between",
+              alignItems: { xs: "flex-start", sm: "center" },
               color: "text.secondary",
               mb: 2,
             }}
@@ -94,33 +117,42 @@ const PostDetail: React.FC = () => {
           <Typography
             variant="body1"
             sx={{
-              fontSize: "1.125rem",
+              fontSize: { xs: "1rem", sm: "1.125rem" },
               lineHeight: 1.7,
               "& p": { mb: 3 },
+              wordBreak: "break-word",
             }}
             data-testid="post-content"
           >
             {post.content}
           </Typography>
         </Box>
-        <CardActions sx={{ justifyContent: "flex-end" }}>
+        <CardActions
+          sx={{
+            justifyContent: { xs: "center", sm: "flex-end" },
+            mt: { xs: 2, sm: 3 },
+            gap: 1,
+          }}
+        >
           {isAuthenticated && user?.username === post.username && (
             <>
               <Button
                 variant="contained"
-                size="small"
+                size={isMobile ? "medium" : "small"}
                 onClick={() => openEditPostModal(post)}
                 data-testid="edit-button"
+                fullWidth={isMobile}
               >
                 Edit
               </Button>
               <Button
                 color="error"
                 variant="contained"
-                size="small"
+                size={isMobile ? "medium" : "small"}
                 onClick={handleDelete}
                 disabled={isDeleting}
                 data-testid="delete-button"
+                fullWidth={isMobile}
               >
                 Delete
               </Button>
