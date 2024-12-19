@@ -1,26 +1,13 @@
 import { UserProfile } from "./userTypes";
 import { Post } from "./api";
 
-// Kombinera alla modal-relaterade states i ett interface
-export interface ModalState {
-  createPost: {
-    isOpen: boolean;
-  };
-  editPost: {
-    isOpen: boolean;
-    post: Post | null;
-  };
-  editProfile: {
-    isOpen: boolean;
-    profile: UserProfile | null;
-  };
-  changePassword: {
-    isOpen: boolean;
-  };
-}
-
 export interface ModalContextType {
-  state: ModalState;
+  isCreatePostModalOpen: boolean;
+  isEditPostModalOpen: boolean;
+  isEditProfileModalOpen: boolean;
+  isChangePasswordModalOpen: boolean;
+  editingPost: Post | null;
+  editingProfile: UserProfile | null;
   openCreatePostModal: () => void;
   closeCreatePostModal: () => void;
   openEditPostModal: (post: Post) => void;

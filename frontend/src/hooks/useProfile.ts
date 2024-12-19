@@ -24,7 +24,6 @@ export function useProfile(id: string) {
     queryFn: () => profileApi.fetchProfile(id),
   });
 }
-
 export function useUpdateProfile(id: string) {
   const queryClient = useQueryClient();
   return useMutation({

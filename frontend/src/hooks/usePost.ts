@@ -1,49 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  PostsResponse,
-  Post,
-  CategoriesResponse,
-  UseHandlePostDeleteOptions,
-} from "../types/postsTypes";
-import { api } from "../services/authService";
-import { PostFormData } from "../validation/schema";
-import { UserProfile } from "../types/userTypes";
 import { useAlert } from "../context/alert";
 import { useNavigate } from "react-router-dom";
+import { postApi } from "../services/postApi";
+import { profileApi } from "../services/profileApi";
+import type { PostFormData } from "../validation/schema";
+import type { UseHandlePostDeleteOptions } from "../types/postsTypes";
 
-export const postApi = {
-  fetchAll: async () => {
-    const { data } = await api.get<PostsResponse>("/posts");
-    return data.posts;
-  },
-
-  fetchById: async (id: string) => {
-    const { data } = await api.get<Post>(`/posts/${id}`);
-    return data;
-  },
-  create: async (postData: PostFormData) => {
-    const { data } = await api.post("/posts", postData);
-    return data;
-  },
-  deleteById: async (id: string) => {
-    await api.delete(`/posts/${id}`);
-  },
-  updateById: async (id: string, data: PostFormData) => {
-    await api.put(`/posts/${id}`, data);
-  },
-  fetchCategories: async () => {
-    const { data } = await api.get<CategoriesResponse>("/categories");
-    return data.categories;
-  },
-};
-
-export const profileApi = {
-  fetchProfile: async (id: string) => {
-    const { data } = await api.get<UserProfile>(`/profile/${id}`);
-    return data;
-  },
-};
-
+// Query hooks
 export function usePosts() {
   return useQuery({
     queryKey: ["posts"],
@@ -55,7 +18,52 @@ export function usePost(id: string) {
   return useQuery({
     queryKey: ["post", id],
     queryFn: () => postApi.fetchById(id),
-    select: (data: Post) => data,
+  });
+}
+
+export function useCategories() {
+  return useQuery({
+    queryKey: ["categories"],
+    queryFn: postApi.fetchCategories,
+  });
+}
+
+// Mutation hooks
+export function useCreatePost() {
+  const queryClient = useQueryClient();
+  const { showAlert } = useAlert();
+
+  return useMutation({
+    mutationFn: postApi.create,
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      showAlert("Post created successfully", "success");
+      return response;
+    },
+    onError: (error) => {
+      console.error("Error creating post:", error);
+      showAlert("Error creating post", "error");
+      throw error;
+    },
+  });
+}
+
+export function useEditPost(id: string) {
+  const queryClient = useQueryClient();
+  const { showAlert } = useAlert();
+
+  return useMutation({
+    mutationFn: (data: PostFormData) => postApi.updateById(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["post", id] });
+      showAlert("Post updated successfully", "success");
+      return "Post updated successfully";
+    },
+    onError: (error) => {
+      console.error("Error updating post:", error);
+      showAlert("Error updating post", "error");
+    },
   });
 }
 
@@ -85,53 +93,17 @@ export function useDeletePost({
     },
   });
 
-  const handleDelete = () => {
-    if (window.confirm("Are you sure you want to delete this post?")) {
-      mutation.mutate();
-    }
+  return {
+    handleDelete: () => {
+      if (window.confirm("Are you sure you want to delete this post?")) {
+        mutation.mutate();
+      }
+    },
+    isDeleting: mutation.isLoading,
   };
-
-  return { handleDelete, isDeleting: mutation.isLoading };
 }
 
-export function useCreatePost() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (data: PostFormData) => postApi.create(data),
-    onSuccess: (response) => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-      return response;
-    },
-    onError: (error) => {
-      console.error("Error creating post:", error);
-      throw error;
-    },
-  });
-}
-
-export function useEditPost(id: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (data: PostFormData) => postApi.updateById(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-      queryClient.invalidateQueries({ queryKey: ["post", id] });
-      return "Post updated successfully";
-    },
-    onError: (error) => {
-      console.error("Error updating post:", error);
-    },
-  });
-}
-
-export function useCategories() {
-  return useQuery({
-    queryKey: ["categories"],
-    queryFn: postApi.fetchCategories,
-  });
-}
-
+// Move profile hook to separate file
 export function useProfile(id: string) {
   return useQuery({
     queryKey: ["profile", id],

@@ -29,3 +29,15 @@ export interface UseHandlePostDeleteOptions {
   onSuccess?: () => void;
   redirectTo?: string;
 }
+
+export interface CreatePostModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export interface EditPostModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export type { Post };
