@@ -4,37 +4,37 @@ A full-stack blog application built with TypeScript, React, and Node.js where us
 
 ## Features
 
-- **Användarhantering**
+- **User Management**
 
-  - 🔐 Registrering och inloggning
-  - 👤 Profilhantering med CRUD-operationer
-  - 🔑 Lösenordsändring
-  - 🎫 JWT-baserad autentisering
+  - 🔐 Registration and Login
+  - 👤 Profile Management with CRUD Operations
+  - 🔑 Password Change
+  - 🎫 JWT-based Authentication
 
-- **Bloggfunktionalitet**
+- **Blog Functionality**
 
-  - 📝 Skapa, läsa, uppdatera och ta bort inlägg
-  - 🏷️ Kategorihantering
-  - 🔍 Filtrering av inlägg
-  - 🔄 Optimistisk UI-uppdatering
+  - 📝 Create, Read, Update and Delete Posts
+  - 🏷️ Category Management
+  - 🔍 Post Filtering
+  - 🔄 Optimistic UI Updates
 
 - **UI/UX**
-  - 🎨 Material-UI komponenter
-  - ✨ Modal-baserad interaktion
-  - 📊 Context-baserad state management
-  - 🔔 Alert system för användarfeedback
-  - 📱 Responsiv design
+  - 🎨 Material-UI Components
+  - ✨ Modal-based Interaction
+  - 📊 Context-based State Management
+  - 🔔 Alert System for User Feedback
+  - 📱 Responsive Design
 
 ## Tech Stack
 
 ### Frontend
 
-- React 18 med TypeScript
+- React 18 with TypeScript
 - Material-UI v5
-- TanStack Query (React Query) för datahantering
-- Zod för validering
-- Cypress för testing
-- Context API för global state:
+- TanStack Query (React Query) for data management
+- Zod for validation
+- Cypress for testing
+- Context API for global state:
   - Alert Context
   - Modal Context
   - Auth Context
@@ -65,53 +65,53 @@ npm run cy:open
 
 ### Test Data Structure
 
-Testdata är organiserad under `cypress/fixtures/testData/`:
+Test data is organized under `cypress/fixtures/testData/`:
 
-- `users.json` - Användartestdata
-- `posts.json` - Blogginläggstestdata
-- `categories.json` - Kategoritestdata
+- `users.json` - User test data
+- `posts.json` - Blog post test data
+- `categories.json` - Category test data
 
 ## API Endpoints
 
 ### Auth & Users
 
-- `POST /api/auth/login` - Inloggning
-- `POST /api/auth/register` - Registrering
-- `GET /api/profile/:id` - Hämta profil
-- `PUT /api/profile/:id` - Uppdatera profil
-- `PUT /api/profile/:id/change-password` - Ändra lösenord
-- `DELETE /api/profile/:id` - Ta bort konto
+- `POST /api/auth/login` - Login
+- `POST /api/auth/register` - Registration
+- `GET /api/profile/:id` - Get profile
+- `PUT /api/profile/:id` - Update profile
+- `PUT /api/profile/:id/change-password` - Change password
+- `DELETE /api/profile/:id` - Delete account
 
 ### Posts
 
-- `GET /api/posts` - Lista alla inlägg
-- `GET /api/posts/:id` - Hämta specifikt inlägg
-- `POST /api/posts` - Skapa nytt inlägg
-- `PUT /api/posts/:id` - Uppdatera inlägg
-- `DELETE /api/posts/:id` - Ta bort inlägg
+- `GET /api/posts` - List all posts
+- `GET /api/posts/:id` - Get specific post
+- `POST /api/posts` - Create new post
+- `PUT /api/posts/:id` - Update post
+- `DELETE /api/posts/:id` - Delete post
 
 ### Categories
 
-- `GET /api/categories` - Lista kategorier
-- `POST /api/categories` - Skapa kategori
+- `GET /api/categories` - List categories
+- `POST /api/categories` - Create category
 
 ## Installation & Setup
 
-1. Klona repot:
+1. Clone the repository:
 
 ```bash
 git clone [repo-url]
 cd stories_app
 ```
 
-2. Installera dependencies:
+2. Install dependencies:
 
 ```bash
 cd frontend && npm install
 cd ../backend && npm install
 ```
 
-3. Konfigurera miljövariabler:
+3. Configure environment variables:
 
 ```env
 # Backend (.env)
@@ -122,14 +122,12 @@ cd ../backend && npm install
    DB_PORT=5432
    JWT_SECRET=your_jwt_secret
    PORT=3000
-JWT_SECRET=your_jwt_secret
-PORT=3000
 
 # Frontend (.env)
 VITE_API_URL=http://localhost:3000/api
 ```
 
-4. Starta utvecklingsservrar:
+4. Start development servers:
 
 ```bash
 # Backend
@@ -139,13 +137,13 @@ npm run dev
 npm run dev
 ```
 
-Applikationen kommer att finnas tillgänglig på:
+The application will be available at:
 
 - Frontend: http://localhost:5173
 - Backend: http://localhost:3000
 
 ## Development
 
-- Använd `npm run lint` för att köra linting
-- Följ TypeScript typer och interfaces i `src/types/`
-- Testa komponenter med Cypress runner
+- Use `npm run lint` to run linting
+- Follow TypeScript types and interfaces in `src/types/`
+- Test components with Cypress runner

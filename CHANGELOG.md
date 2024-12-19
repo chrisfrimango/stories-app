@@ -2,122 +2,122 @@
 
 ### 2024-12-19 docs: update README and test structure
 
-- **Beskrivning**:
-  - Omorganiserar testdata under i cypress
-  - Förbättrar dokumentation av API endpoints
-  - Förtydligar test setup och struktur
+- **Description**:
+  - Reorganizes test data in cypress
+  - Improves documentation of API endpoints
+  - Clarifies test setup and structure
 
 ### 2024-12-18 fix: Github action
 
-- **Beskrivning**:
-  - Fix och debuggging av CI/CD Github action
+- **Description**:
+  - Fix and debugging of CI/CD Github action
 
 ### 2024-12-17 fix: Github action
 
-- **Beskrivning**:
-  - Implementerar CI/CD Github action
+- **Description**:
+  - Implements CI/CD Github action
 
 ### 2024-12-16 feat: post filtering
 
-- **Beskrivning**:
-  - Implementerar ny PostFilter-komponent
+- **Description**:
+  - Implements new PostFilter component
 
 ### 2024-12-16 feat: GitHub Actions CI/CD and Database Migrations
 
-- **Beskrivning**:
-  - Implementerar GitHub Actions workflow för CI/CD
-  - Lägger till databasmigreringar för automatisk setup
-  - coverage reporting
-  - Konfigurerar GitHub Secrets för säker hantering av miljövariabler
-  - Optimerar CI pipeline med caching för Node modules och Cypress binary
+- **Description**:
+  - Implements GitHub Actions workflow for CI/CD
+  - Adds database migrations for automatic setup
+  - Coverage reporting
+  - Configures GitHub Secrets for secure handling of environment variables
+  - Optimizes CI pipeline with caching for Node modules and Cypress binary
 
 ### 2024-12-12 feat: Cypress test updates
 
-- **Beskrivning**:
-  - Uppdaterar, adderar och förbättrar tester.
+- **Description**:
+  - Updates, adds and improves tests.
 
 ### 2024-12-11 feat: profile and post enhancements, Cypress test updates
 
-- **Beskrivning**:
-  - Förbättrar användarhantering och uppdaterar typer
-  - Uppdaterar Cypress-komponenttester och lägger till nytt Cypress-test för `DeleteProfile`
-  - Förbättrar layout-komponenten för bättre UI-hantering och responsivitet.
-  - Allmäna uppdateringar
+- **Description**:
+  - Improves user management and updates types
+  - Updates Cypress component tests and adds new Cypress test for `DeleteProfile`
+  - Improves layout component for better UI handling and responsiveness
+  - General updates
 
 #### 2024-12-10 feat: profile management, password change, and cypress test improvements
 
-- **Beskrivning**:
-  - Implementerar lösenordsändring
-  - Omstrukturerar Cypress-tester och lägger till för profilhantering och lösenordsändring
-  - Skapar ny modal context för bättre UI-hantering
-  - Förbättrar layout-komponenten
+- **Description**:
+  - Implements password change
+  - Restructures Cypress tests and adds tests for profile management and password change
+  - Creates new modal context for better UI handling
+  - Improves layout component
 
 #### 2024-12-09 feat: user and category management, Cypress tests, UI enhancements
 
-- **Beskrivning**:
-  - Utökar användarhantering med nya funktioner
-  - Lägger till hantering av kategorier med nya controllers och routes.
-  - Förbättrar layout och navigering i frontend,
-  - Implementerar nya Cypress-tester
-  - Lägger till nya typer
-  - Förbättrar fel- och laddningshantering i UI-komponenter.
-  - Skapat alert context
-  - Skapat en hook för profilhantering.
+- **Description**:
+  - Expands user management with new features
+  - Adds category management with new controllers and routes
+  - Improves layout and navigation in frontend
+  - Implements new Cypress tests
+  - Adds new types
+  - Improves error and loading handling in UI components
+  - Creates alert context
+  - Creates a hook for profile management
 
 #### 2024-12-06 feat: stories functions, add post management, post backend logic, layout and starting cypress
 
-- **Beskrivning**:
-  - Implementerar funktionalitet för stories/posts.
-  - Lägger till hantering av inlägg (skapa, redigera, ta bort).
-  - Implementerar backend-logik för posts med API-endpoints.
-  - Fortsatt arbete med layout och styling.
-  - Påbörjar implementation av Cypress-tester för komponenter
+- **Description**:
+  - Implements functionality for stories/posts
+  - Adds post management (create, edit, delete)
+  - Implements backend logic for posts with API endpoints
+  - Continued work on layout and styling
+  - Begins implementation of Cypress component tests
 
 #### 2024-12-05 feat: layout, routes, register wip
 
-- **Beskrivning**:
-  - Grundläggande layout för applikationen.
-  - Forsatt arbete med auth-delen
-  - Design av UI för grundläggande layout (t.ex. header, footer, main content).
-  - Skapande av routes för sidor som "Home", "Login", och "Register".
-  - Implementerar routing för navigering mellan olika sidor.
-  - Förberedande arbete för registreringsformulär och integration med backend.
+- **Description**:
+  - Basic layout for the application
+  - Continued work on auth part
+  - Design of UI for basic layout (e.g., header, footer, main content)
+  - Creation of routes for pages like "Home", "Login", and "Register"
+  - Implements routing for navigation between different pages
+  - Preparatory work for registration form and backend integration
 
 #### 2024-12-04 feat: auth, backend logic, database and frontend login ui
 
-- **Beskrivning**:
-  - Lägger till autentiseringslogik i backend och frontend.
-  - Designar och implementerar UI för login-formulär med validering.
-  - Feedback till användaren vid lyckad eller misslyckad inloggning.
-  - Kopplar backend-logik till databasen för hantering av användare.
-  - Skapande av API-endpoints för login och token-baserad autentisering.
-  - Koppling till databasen för validering av användaruppgifter.
-  - Implementerar säkerhetshantering, som bcrypt för lösenordshashning.
+- **Description**:
+  - Adds authentication logic in backend and frontend
+  - Designs and implements UI for login form with validation
+  - User feedback for successful or failed login
+  - Connects backend logic to database for user management
+  - Creation of API endpoints for login and token-based authentication
+  - Database connection for validation of user credentials
+  - Implements security handling, such as bcrypt for password hashing
 
 #### 2024-12-03 setup backend structure, dependencies etc
 
-- **Beskrivning**:
-  - Grundläggande backend-struktur för projektet.
-  - Installerar och konfigurerar nödvändiga beroenden för server och API.
-  - Mappar för controllers, routes, middleware, och services.
-  - Skapar grundläggande serverkonfiguration osv.
-  - Läser in miljövariabler
+- **Description**:
+  - Basic backend structure for the project
+  - Installs and configures necessary dependencies for server and API
+  - Folders for controllers, routes, middleware, and services
+  - Creates basic server configuration etc.
+  - Loads environment variables
 
 #### 2024-12-03 setup project structure and dependencies
 
-- **Beskrivning**:
-  - Grundläggande projektuppsättning främst för frontend.
-  - Installerar och konfigurerar initiala beroenden.
-  - Skapar mappar för komponenter, sidor, och utils.
-  - Grundläggande mappstruktur och installerar nödvändiga paket och dependencies.
-  - Konfigurerar projektverktyg som ESLint och Prettier för kodkvalitet mfl.
-  - Intierar en grund för github workflows
+- **Description**:
+  - Basic project setup mainly for frontend
+  - Installs and configures initial dependencies
+  - Creates folders for components, pages, and utils
+  - Basic folder structure and installs necessary packages and dependencies
+  - Configures project tools like ESLint and Prettier for code quality etc.
+  - Initiates a foundation for github workflows
 
 #### 2024-12-03 initial commit
 
-- **Beskrivning**:
-  - Skapar ett tomt repository och initial projektuppsättning för ett vite / react projekt.
-  - Skapar grundläggande projektfiler, som:
+- **Description**:
+  - Creates an empty repository and initial project setup for a vite / react project
+  - Creates basic project files, such as:
   - `.gitignore`
   - `README.md`
-  - Initerar Git och gör den första commit:en.
+  - Initiates Git and makes the first commit

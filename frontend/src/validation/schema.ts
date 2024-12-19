@@ -53,8 +53,16 @@ export const passwordSchema = z
     path: ["confirmPassword"],
   });
 
+export const contactSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  inquiryType: z.string().min(1, "Please select an inquiry type"),
+  message: z.string().min(10, "Message must be at least 10 characters"),
+});
+
 export type PasswordInput = z.infer<typeof passwordSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type ProfileInput = z.infer<typeof profileSchema>;
 export type PostFormData = z.infer<typeof postSchema>;
+export type ContactFormData = z.infer<typeof contactSchema>;

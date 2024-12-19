@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import { PrivacyPolicyDialog } from "../footer/PrivacyPolicyDialog";
+import { TermsDialog } from "../footer/TermsDialog";
+import { ContactDialog } from "../footer/ContactDialog";
 
 const FooterContainer = styled.footer`
   padding: 1rem;
@@ -44,17 +47,64 @@ const FooterLink = styled.a`
 `;
 
 const Footer: React.FC = () => {
+  const [openDialog, setOpenDialog] = useState<
+    "privacy" | "terms" | "contact" | null
+  >(null);
+
+  const handleClose = () => {
+    setOpenDialog(null);
+  };
+
   return (
-    <FooterContainer>
-      <FooterContent>
-        <Copyright>© 2024 Your App. All rights reserved.</Copyright>
-        <Links>
-          <FooterLink href="#">Privacy Policy</FooterLink>
-          <FooterLink href="#">Terms of Service</FooterLink>
-          <FooterLink href="#">Contact Us</FooterLink>
-        </Links>
-      </FooterContent>
-    </FooterContainer>
+    <>
+      <FooterContainer>
+        <FooterContent>
+          <Copyright>© 2024 Stories App. All rights reserved.</Copyright>
+          <Links>
+            <FooterLink
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setOpenDialog("privacy");
+              }}
+            >
+              Privacy Policy
+            </FooterLink>
+            <FooterLink
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setOpenDialog("terms");
+              }}
+            >
+              Terms of Service
+            </FooterLink>
+            <FooterLink
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setOpenDialog("contact");
+              }}
+            >
+              Contact Us
+            </FooterLink>
+          </Links>
+        </FooterContent>
+      </FooterContainer>
+
+      <PrivacyPolicyDialog
+        open={openDialog === "privacy"}
+        onClose={handleClose}
+      />
+      <TermsDialog
+        open={openDialog === "terms"}
+        onClose={handleClose}
+      />
+      <ContactDialog
+        open={openDialog === "contact"}
+        onClose={handleClose}
+      />
+    </>
   );
 };
 
