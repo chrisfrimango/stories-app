@@ -1,5 +1,7 @@
+import { ReactNode } from "react";
+
 export interface HeaderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export interface NavBarProps {
@@ -8,15 +10,6 @@ export interface NavBarProps {
 
 export interface ButtonProps {
   variant?: "primary" | "secondary" | "danger";
-}
-
-export interface AlertState {
-  message: string;
-  severity: "success" | "error";
-}
-
-export interface AlertContextType {
-  showAlert: (message: string, severity: "success" | "error") => void;
 }
 
 export interface PageComponents {

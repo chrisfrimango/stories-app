@@ -4,11 +4,12 @@ import { AuthenticatedRoutes } from "./AuthenticatedRoutes";
 import { PublicRoutes } from "./PublicRoute";
 import { Suspense } from "react";
 import { Loading } from "../ui/Loading";
-import { lazy } from "react";
+// import { lazy } from "react";
+import { Home, Login, Register } from "./LazyComponents";
 
-const Home = lazy(() => import("../pages/Home"));
-const Login = lazy(() => import("../pages/Login"));
-const Register = lazy(() => import("../pages/Register"));
+// const Home = lazy(() => import("../pages/Home"));
+// const Login = lazy(() => import("../pages/Login"));
+// const Register = lazy(() => import("../pages/Register"));
 
 export const router = createBrowserRouter([
   {
