@@ -3,31 +3,14 @@ import {
   useUpdateProfile,
   useDeleteProfile,
 } from "../../../src/hooks/useProfile";
+import { setupMockAuth, setupMockProfile } from "../../support/mockHelpers";
 
 describe("useProfile Hook", () => {
   const userId = "1";
 
   beforeEach(() => {
-    cy.fixture("profile.json").then((profileData) => {
-      // Setup mock auth state like in your other successful tests
-      cy.window().then((win) => {
-        win.localStorage.setItem("auth_token", "fake-token");
-        win.localStorage.setItem(
-          "user_data",
-          JSON.stringify({
-            id: profileData.id,
-            username: profileData.username,
-            email: profileData.email,
-          })
-        );
-      });
-
-      // Mock initial profile data
-      cy.intercept("GET", "**/api/profile/1", {
-        statusCode: 200,
-        body: profileData,
-      }).as("getProfile");
-    });
+    setupMockAuth(userId);
+    setupMockProfile(userId);
   });
 
   const TestComponent = () => {

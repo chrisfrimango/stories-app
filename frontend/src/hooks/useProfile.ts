@@ -1,22 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "../services/authService";
-import { PasswordInput, ProfileInput } from "../validation/schema";
-import { UserProfile } from "../types/userTypes";
-export const profileApi = {
-  fetchProfile: async (id: string) => {
-    const { data } = await api.get<UserProfile>(`/profile/${id}`);
-    return data;
-  },
-  updateProfile: async (id: string, data: ProfileInput) => {
-    await api.put(`/profile/${id}`, data);
-  },
-  changePassword: async (id: string, data: PasswordInput) => {
-    await api.put(`/profile/${id}/change-password`, data);
-  },
-  deleteProfile: async (id: string) => {
-    await api.delete(`/profile/${id}`);
-  },
-};
+import { profileApi } from "../services/profileApi";
+import type { PasswordInput, ProfileInput } from "../validation/schema";
+import { useAlert } from "../context/alert";
 
 export function useProfile(id: string) {
   return useQuery({
@@ -24,45 +9,57 @@ export function useProfile(id: string) {
     queryFn: () => profileApi.fetchProfile(id),
   });
 }
+
 export function useUpdateProfile(id: string) {
   const queryClient = useQueryClient();
+  const { showAlert } = useAlert();
+
   return useMutation({
     mutationFn: (data: ProfileInput) => profileApi.updateProfile(id, data),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["profile", id] });
-      queryClient.setQueryData(["profile", id], response);
-      return "Profile updated successfully";
+      showAlert("Profile updated successfully", "success");
+      return response;
     },
     onError: (error) => {
       console.error("Error updating profile:", error);
+      showAlert("Error updating profile", "error");
     },
   });
 }
 
 export function useChangePassword(id: string) {
+  const { showAlert } = useAlert();
+
   return useMutation({
     mutationFn: (data: PasswordInput) => profileApi.changePassword(id, data),
     onSuccess: () => {
+      showAlert("Password changed successfully", "success");
       return "Password changed successfully";
     },
     onError: (error) => {
       console.error("Error changing password:", error);
+      showAlert("Error changing password", "error");
     },
   });
 }
 
 export function useDeleteProfile(id: string) {
   const queryClient = useQueryClient();
+  const { showAlert } = useAlert();
+
   return useMutation({
     mutationFn: () => profileApi.deleteProfile(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["profile", id] });
+      showAlert("Profile deleted successfully", "success");
       return "Profile deleted successfully";
     },
     onError: (error) => {
       console.error("Error deleting profile:", error);
+      showAlert("Error deleting profile", "error");
       throw error;
     },
   });

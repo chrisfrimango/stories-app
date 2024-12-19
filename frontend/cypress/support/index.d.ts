@@ -1,5 +1,5 @@
 /// <reference types="cypress" />
-import { Post } from "../../src/types/post";
+import { Post } from "../../src/types/postsTypes";
 import { UserProfile } from "../../src/types/user";
 
 declare global {

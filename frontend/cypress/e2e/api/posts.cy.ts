@@ -17,10 +17,11 @@ describe("Posts API", () => {
 
 describe("Posts API Structure", () => {
   beforeEach(() => {
-    cy.fixture("posts.json").then((posts) => {
-      cy.intercept("GET", `${Cypress.env("API_URL")}/posts`, posts).as(
-        "getPosts"
-      );
+    cy.fixture("testData/posts.json").then((postsData) => {
+      cy.intercept("GET", `${Cypress.env("API_URL")}/posts`, {
+        statusCode: 200,
+        body: { posts: postsData.posts },
+      }).as("getPosts");
     });
 
     cy.window().then((win) => {

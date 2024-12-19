@@ -6,7 +6,6 @@ import { profileApi } from "../services/profileApi";
 import type { PostFormData } from "../validation/schema";
 import type { UseHandlePostDeleteOptions } from "../types/postsTypes";
 
-// Query hooks
 export function usePosts() {
   return useQuery({
     queryKey: ["posts"],
@@ -28,7 +27,6 @@ export function useCategories() {
   });
 }
 
-// Mutation hooks
 export function useCreatePost() {
   const queryClient = useQueryClient();
   const { showAlert } = useAlert();

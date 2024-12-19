@@ -20,7 +20,7 @@ describe("PostList Component", () => {
     setupMockAuth();
     cy.intercept("GET", "**/api/posts", {
       statusCode: 200,
-      fixture: "posts.json",
+      fixture: "testData/posts.json",
     }).as("getPosts");
   });
 
@@ -72,7 +72,7 @@ describe("PostList Component", () => {
     it("shows loading state", () => {
       cy.intercept("GET", "**/api/posts", {
         statusCode: 200,
-        fixture: "posts.json",
+        fixture: "testData/posts.json",
         delay: 1000,
       }).as("getPostsDelayed");
 
