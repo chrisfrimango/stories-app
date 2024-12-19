@@ -20,10 +20,10 @@ const NavBar: React.FC<NavBarProps> = ({ onCreatePost }) => {
     navigate(path);
   };
 
-  // Common button styles
+
   const buttonSx = {
-    textTransform: "none", // Prevents all-caps
-    fontWeight: 400, // Thinner font
+    textTransform: "none",
+    fontWeight: 400,
     fontSize: "1rem",
     "&:hover": {
       backgroundColor: "transparent",
@@ -121,9 +121,9 @@ const NavBar: React.FC<NavBarProps> = ({ onCreatePost }) => {
               onClick={() => handleNavigation("/register")}
               sx={{
                 ...buttonSx,
-                backgroundColor: "#333", // Dark grey
+                backgroundColor: "#333",
                 "&:hover": {
-                  backgroundColor: "#555", // Lighter grey on hover
+                  backgroundColor: "#555",
                 },
               }}
             >

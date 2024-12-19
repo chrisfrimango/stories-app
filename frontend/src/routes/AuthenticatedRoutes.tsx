@@ -14,7 +14,6 @@ export function AuthenticatedRoutes() {
   if (isAuthenticated && user?.username) {
     return (
       <Routes>
-        {/* Blog routes */}
         <Route
           path="/blog"
           element={<Navigate to={`/${user.username}/blog`} replace />}
@@ -32,7 +31,6 @@ export function AuthenticatedRoutes() {
           element={<Navigate to={`/${user.username}/blog`} replace />}
         />
 
-        {/* Profile routes */}
         <Route
           path="/profile"
           element={<Navigate to={`/${user.username}/profile`} replace />}
@@ -46,7 +44,6 @@ export function AuthenticatedRoutes() {
           }
         />
 
-        {/* Post detail routes */}
         <Route
           path="/:username/post/:id"
           element={

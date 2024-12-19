@@ -101,7 +101,7 @@ export function useCreatePost() {
     mutationFn: (data: PostFormData) => postApi.create(data),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
-      return response; // Returnera response så komponenten kan använda den
+      return response;
     },
     onError: (error) => {
       console.error("Error creating post:", error);

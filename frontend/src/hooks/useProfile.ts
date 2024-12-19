@@ -30,10 +30,8 @@ export function useUpdateProfile(id: string) {
   return useMutation({
     mutationFn: (data: ProfileInput) => profileApi.updateProfile(id, data),
     onSuccess: (response) => {
-      // Invalidate both profile queries
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["profile", id] });
-      // Update auth user data if needed
       queryClient.setQueryData(["profile", id], response);
       return "Profile updated successfully";
     },

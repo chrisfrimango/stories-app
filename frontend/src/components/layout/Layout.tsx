@@ -33,10 +33,10 @@ const HeaderWrapper = styled.div`
 
 const Main = styled.main`
   flex: 1;
-  margin-top: 100px; // Justera detta värde baserat på din headers höjd
+  margin-top: 100px;
   padding: 2rem;
   background-color: ${({ theme }) => theme.colors.background};
-  min-height: calc(100vh - 100px); // Justera detta värde också
+  min-height: calc(100vh - 100px);
   overflow-y: auto;
 `;
 

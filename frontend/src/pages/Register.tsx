@@ -126,14 +126,12 @@ const Register: React.FC = () => {
         return;
       }
 
-      // Log the user in automatically after registration
       login(response.token, {
         id: response.user.id,
         email: response.user.email,
         username: response.user.username,
       });
 
-      // Redirect to blog page
       navigate("/blog", { replace: true });
     } catch (error) {
       const errorMessage =

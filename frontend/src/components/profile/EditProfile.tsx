@@ -74,6 +74,7 @@ const EditProfile: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) => {
       fullScreen={fullScreen}
       maxWidth="sm"
       fullWidth
+      disableScrollLock
       PaperProps={{
         sx: {
           m: 2,

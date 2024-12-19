@@ -1,5 +1,3 @@
-// frontend/src/types/api.ts
-
 export interface User {
   id: string;
   username: string;

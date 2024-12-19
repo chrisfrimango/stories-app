@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// Auth schemas
 export const loginSchema = z.object({
   email: z.string().email("Invalid email address").toLowerCase().trim(),
   password: z.string().min(6, "Password must be at least 6 characters"),
@@ -27,7 +26,6 @@ export const registerSchema = z
     path: ["confirmPassword"],
   });
 
-// Profile schema
 export const profileSchema = z.object({
   username: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),

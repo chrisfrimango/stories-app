@@ -1,7 +1,6 @@
 const UNSPLASH_ACCESS_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
 
 export async function getCategoryImage(category: string): Promise<string> {
-  // Map categories to relevant search terms
   const searchTerms: Record<string, string> = {
     Technology: "technology computer",
     Travel: "travel landscape",
@@ -9,7 +8,6 @@ export async function getCategoryImage(category: string): Promise<string> {
     Lifestyle: "lifestyle people",
     Health: "health wellness",
     Sports: "sports action",
-    // Add more categories as needed
     default: "abstract background",
   };
 
