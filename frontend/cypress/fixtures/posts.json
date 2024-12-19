@@ -1,12 +1,3 @@
 {
-  "posts": [
-    {
-      "id": 1,
-      "title": "Test Post 1",
-      "content": "This is test content 1",
-      "category": "Technology",
-      "username": "testuser",
-      "created_at": "2024-03-20T10:00:00Z"
-    }
-  ]
+  "posts": []
 }

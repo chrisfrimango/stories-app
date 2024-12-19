@@ -4,25 +4,40 @@ A full-stack blog application built with TypeScript, React, and Node.js where us
 
 ## Features
 
-- 🔐 User Authentication (Register/Login)
-- 👤 User Profile Management
-- 📝 Blog Post Creation and Management
-- 🏷️ Category Management
-- 🎨 Responsive Material-UI Design
-- ✨ Real-time Form Validation
-- 🔄 Optimistic Updates
-- 🧪 Comprehensive Test Coverage
+- **Användarhantering**
+
+  - 🔐 Registrering och inloggning
+  - 👤 Profilhantering med CRUD-operationer
+  - 🔑 Lösenordsändring
+  - 🎫 JWT-baserad autentisering
+
+- **Bloggfunktionalitet**
+
+  - 📝 Skapa, läsa, uppdatera och ta bort inlägg
+  - 🏷️ Kategorihantering
+  - 🔍 Filtrering av inlägg
+  - 🔄 Optimistisk UI-uppdatering
+
+- **UI/UX**
+  - 🎨 Material-UI komponenter
+  - ✨ Modal-baserad interaktion
+  - 📊 Context-baserad state management
+  - 🔔 Alert system för användarfeedback
+  - 📱 Responsiv design
 
 ## Tech Stack
 
 ### Frontend
 
-- React with TypeScript
-- Material-UI for styling
-- React Query for state management
-- React Hook Form for form handling
-- Zod for validation
-- Cypress for testing
+- React 18 med TypeScript
+- Material-UI v5
+- TanStack Query (React Query) för datahantering
+- Zod för validering
+- Cypress för testing
+- Context API för global state:
+  - Alert Context
+  - Modal Context
+  - Auth Context
 - Vite for build tooling
 
 ### Backend
@@ -33,28 +48,73 @@ A full-stack blog application built with TypeScript, React, and Node.js where us
 - JWT for authentication
 - Zod for validation
 
-## Prerequisites
+## Testing
 
-- Node.js (v16 or higher)
-- PostgreSQL (v14 or higher)
-- npm or yarn
+### Cypress Tester
 
-## Getting Started
+```bash
+# Komponenttester
+npm run cy:component
 
-1. **Clone the repository**
+# E2E tester
+npm run cy:e2e
 
-   ```bash
-   git clone <repository-url>
-   cd stories_app
-   ```
+# Öppna Cypress UI
+npm run cy:open
+```
 
-2. **Set up environment variables**
+### Test Data Structure
 
-   Create `.env` files in both frontend and backend directories:
+Testdata är organiserad under `cypress/fixtures/testData/`:
 
-   Backend `.env`:
+- `users.json` - Användartestdata
+- `posts.json` - Blogginläggstestdata
+- `categories.json` - Kategoritestdata
 
-   ```env
+## API Endpoints
+
+### Auth & Users
+
+- `POST /api/auth/login` - Inloggning
+- `POST /api/auth/register` - Registrering
+- `GET /api/profile/:id` - Hämta profil
+- `PUT /api/profile/:id` - Uppdatera profil
+- `PUT /api/profile/:id/change-password` - Ändra lösenord
+- `DELETE /api/profile/:id` - Ta bort konto
+
+### Posts
+
+- `GET /api/posts` - Lista alla inlägg
+- `GET /api/posts/:id` - Hämta specifikt inlägg
+- `POST /api/posts` - Skapa nytt inlägg
+- `PUT /api/posts/:id` - Uppdatera inlägg
+- `DELETE /api/posts/:id` - Ta bort inlägg
+
+### Categories
+
+- `GET /api/categories` - Lista kategorier
+- `POST /api/categories` - Skapa kategori
+
+## Installation & Setup
+
+1. Klona repot:
+
+```bash
+git clone [repo-url]
+cd stories_app
+```
+
+2. Installera dependencies:
+
+```bash
+cd frontend && npm install
+cd ../backend && npm install
+```
+
+3. Konfigurera miljövariabler:
+
+```env
+# Backend (.env)
    DB_USER=your_db_user
    DB_PASSWORD=your_db_password
    DB_NAME=your_db_name
@@ -62,116 +122,30 @@ A full-stack blog application built with TypeScript, React, and Node.js where us
    DB_PORT=5432
    JWT_SECRET=your_jwt_secret
    PORT=3000
-   ```
+JWT_SECRET=your_jwt_secret
+PORT=3000
 
-   Frontend `.env`:
+# Frontend (.env)
+VITE_API_URL=http://localhost:3000/api
+```
 
-   ```env
-   VITE_API_URL=http://localhost:3000
-   ```
+4. Starta utvecklingsservrar:
 
-3. **Install dependencies**
+```bash
+# Backend
+npm run dev
 
-   ```bash
-   # Install backend dependencies
-   cd backend
-   npm install
+# Frontend
+npm run dev
+```
 
-   # Install frontend dependencies
-   cd ../frontend
-   npm install
-   ```
+Applikationen kommer att finnas tillgänglig på:
 
-4. **Set up the database**
+- Frontend: http://localhost:5173
+- Backend: http://localhost:3000
 
-   ```bash
-   # From the backend directory
-   npm run migrate
-   ```
+## Development
 
-5. **Start the development servers**
-
-   In separate terminal windows:
-
-   ```bash
-   # Start backend server
-   cd backend
-   npm run dev
-
-   # Start frontend server
-   cd frontend
-   npm run dev
-   ```
-
-   The application will be available at:
-
-   - Frontend: http://localhost:5173
-   - Backend: http://localhost:3000
-
-## Testing
-
-### Frontend Tests
-
-bash
-Run component tests
-npm run test:component
-Run E2E tests
-npm run test:e2e
-Run tests with coverage
-npm run cypress:coverage
-
-### Backend Tests
-
-bash
-Run tests
-npm test
-
-## API Endpoints
-
-### Authentication
-
-- `POST /api/users/register` - Register new user
-- `POST /api/users/login` - Login user
-
-### Users
-
-- `GET /api/users/profile` - Get user profile
-- `PUT /api/users/:id` - Update user profile
-- `DELETE /api/users/:id` - Delete user account
-- `PUT /api/users/:id/change-password` - Change password
-
-### Posts
-
-- `GET /api/posts` - Get all posts
-- `GET /api/posts/:id` - Get single post
-- `POST /api/posts` - Create new post
-- `PUT /api/posts/:id` - Update post
-- `DELETE /api/posts/:id` - Delete post
-
-### Categories
-
-- `GET /api/categories` - Get all categories
-- `POST /api/categories` - Create new category
-
-## Project Structure
-
-stories_app/
-├── frontend/
-│ ├── src/
-│ │ ├── components/
-│ │ ├── pages/
-│ │ ├── hooks/
-│ │ ├── utils/
-│ │ ├── validation/
-│ │ └── types/
-│ ├── cypress/
-│ └── public/
-└── backend/
-├── src/
-│ ├── controllers/
-│ ├── middlewares/
-│ ├── routes/
-│ ├── utils/
-│ ├── validation/
-│ └── types/
-└── tests/
+- Använd `npm run lint` för att köra linting
+- Följ TypeScript typer och interfaces i `src/types/`
+- Testa komponenter med Cypress runner

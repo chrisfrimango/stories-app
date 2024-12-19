@@ -1,5 +1,12 @@
 # CHANGELOG
 
+### 2024-12-19 docs: update README and test structure
+
+- **Beskrivning**:
+  - Omorganiserar testdata under i cypress
+  - Förbättrar dokumentation av API endpoints
+  - Förtydligar test setup och struktur
+
 ### 2024-12-18 fix: Github action
 
 - **Beskrivning**:
