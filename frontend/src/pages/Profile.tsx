@@ -9,7 +9,7 @@ import { Error } from "../ui/Error";
 
 const Profile: React.FC = () => {
   const { user: currentUser, isAuthenticated } = useAuth();
-  const { data: profile, isLoading, error } = useProfile(currentUser?.id || "");
+  const { profile, isLoading, error } = useProfile(currentUser?.id || "");
 
   if (!isAuthenticated) return <Navigate to="/login" />;
   if (isLoading) return <ProfileSkeleton />;

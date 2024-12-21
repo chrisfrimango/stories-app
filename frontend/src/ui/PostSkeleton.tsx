@@ -7,7 +7,10 @@ interface PostSkeletonProps {
 
 const PostSkeleton: React.FC<PostSkeletonProps> = ({ count = 6 }) => {
   return (
-    <Box sx={{ flexGrow: 1, margin: "0 auto", maxWidth: 1200 }}>
+    <Box
+      sx={{ flexGrow: 1, margin: "0 auto", maxWidth: 1200 }}
+      data-testid="loading"
+    >
       <Grid container spacing={{ xs: 2, md: 3 }}>
         {[...Array(count)].map((_, index) => {
           const isFeatured = index === 0;

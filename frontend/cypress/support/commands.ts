@@ -80,7 +80,7 @@ Cypress.Commands.add("mockAuthState", (user = null) => {
 });
 
 Cypress.Commands.add("setupMockProfile", () => {
-  cy.fixture("profile.json").then((profileData) => {
+  cy.fixture("testData/profile.json").then((profileData) => {
     // Mock auth context
     cy.window().then((win) => {
       win.localStorage.setItem("auth_token", "fake-token");
@@ -144,7 +144,7 @@ Cypress.Commands.add("mockAuthUser", () => {
 });
 
 Cypress.Commands.add("setupDeleteProfile", () => {
-  cy.fixture("profile.json").then((profileData) => {
+  cy.fixture("testData/profile.json").then((profileData) => {
     // Setup mock auth state
     cy.window().then((win) => {
       win.localStorage.setItem("auth_token", "fake-token");

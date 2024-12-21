@@ -1,9 +1,14 @@
 /// <reference types="cypress" />
 import ProfileCard from "../../../src/components/profile/ProfileCard";
+import { UserProfile } from "../../../src/types/userTypes";
 
 describe("ProfileCard Component", () => {
+  let profileData: UserProfile;
+
   beforeEach(() => {
-    cy.fixture("profile.json").then((profileData) => {
+    cy.fixture("testData/profile.json").then((data) => {
+      profileData = data;
+
       cy.window().then((win) => {
         win.localStorage.setItem("auth_token", "fake-token");
         win.localStorage.setItem(
@@ -15,53 +20,23 @@ describe("ProfileCard Component", () => {
           })
         );
       });
-
-      cy.intercept("GET", "**/api/profile/*", {
-        statusCode: 200,
-        body: profileData,
-      }).as("getProfile");
     });
   });
 
   it("displays profile information correctly", () => {
-    cy.mount(<ProfileCard />);
-    cy.wait("@getProfile");
+    cy.mount(<ProfileCard profile={profileData} />);
 
-    cy.get('[data-testid="profile-username"]').should("contain", "testuser");
+    cy.get('[data-testid="profile-username"]').should(
+      "contain",
+      profileData.username
+    );
     cy.get('[data-testid="profile-email"]').should(
       "contain",
-      "test@example.com"
+      profileData.email
     );
     cy.get('[data-testid="profile-created-date"]').should(
       "contain",
-      "2024-03-20"
+      profileData.created_at
     );
-  });
-
-  it("handles loading state", () => {
-    cy.intercept("GET", "**/api/profile/*", {
-      delay: 1000,
-      statusCode: 200,
-      fixture: "profile.json",
-    }).as("getProfileDelayed");
-
-    cy.mount(<ProfileCard />);
-    cy.get('[data-testid="loading"]').should("exist");
-    cy.contains("Loading...").should("be.visible");
-    cy.wait("@getProfileDelayed");
-    cy.get('[data-testid="loading"]').should("not.exist");
-    cy.get('[data-testid="profile-username"]').should("contain", "testuser");
-  });
-
-  it("handles error state", () => {
-    cy.intercept("GET", "**/api/profile/*", {
-      statusCode: 500,
-      body: { message: "Server error" },
-    }).as("getProfileError");
-
-    cy.mount(<ProfileCard />);
-    cy.wait("@getProfileError");
-    cy.get('[data-testid="error-message"]').should("be.visible");
-    cy.contains("Something went wrong").should("be.visible");
   });
 });

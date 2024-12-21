@@ -14,7 +14,7 @@ describe("useProfile Hook", () => {
   });
 
   const TestComponent = () => {
-    const { data: profile, isLoading, error } = useProfile(userId);
+    const { profile, isLoading, error } = useProfile(userId);
     const { mutate: updateProfile } = useUpdateProfile(userId);
     const { mutate: deleteProfile } = useDeleteProfile(userId);
 
@@ -55,7 +55,7 @@ describe("useProfile Hook", () => {
     cy.intercept("GET", "**/api/profile/1", {
       delay: 1000,
       statusCode: 200,
-      fixture: "profile.json",
+      fixture: "testData/profile.json",
     }).as("getProfileDelayed");
 
     cy.mount(<TestComponent />);
