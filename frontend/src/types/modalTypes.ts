@@ -17,3 +17,15 @@ export interface ModalContextType {
   openChangePasswordModal: () => void;
   closeChangePasswordModal: () => void;
 }
+
+export interface ModalProviderProps {
+  children: React.ReactNode;
+  initialState?: {
+    editingPost?: Post | null;
+    editingProfile?: UserProfile | null;
+    isCreatePostModalOpen?: boolean;
+    isEditPostModalOpen?: boolean;
+    isEditProfileModalOpen?: boolean;
+    isChangePasswordModalOpen?: boolean;
+  };
+}

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authMiddleware } from "../middlewares/auth";
+import { validateRequest } from "../middlewares/validateRequest";
 import {
   getAllPosts,
   getPostById,
@@ -7,16 +8,19 @@ import {
   updatePost,
   deletePost,
 } from "../controllers/postController";
+import { createPostSchema, updatePostSchema } from "../validation/schema";
 
 const router = Router();
 
-// Public routes
 router.get("/", getAllPosts);
 router.get("/:id", getPostById);
-
-// Protected routes
-router.post("/", authMiddleware, createPost);
-router.put("/:id", authMiddleware, updatePost);
+router.post("/", authMiddleware, validateRequest(createPostSchema), createPost);
+router.put(
+  "/:id",
+  authMiddleware,
+  validateRequest(updatePostSchema),
+  updatePost
+);
 router.delete("/:id", authMiddleware, deletePost);
 
 export { router as postRoutes };

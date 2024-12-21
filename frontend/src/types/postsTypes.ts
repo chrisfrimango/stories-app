@@ -1,6 +1,4 @@
 import { Post } from "./api";
-// import { UserProfile } from "./userTypes";
-
 export interface PostCardProps {
   post: Post;
   isFeatured?: boolean;

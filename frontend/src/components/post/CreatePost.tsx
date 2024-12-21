@@ -148,7 +148,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
       showAlert("Post created successfully!", "success");
       reset();
       onClose();
-      // Hantera navigation här istället
+
       if (user?.username) {
         navigate(`/${user.username}/post/${response.post.id}`);
       } else {

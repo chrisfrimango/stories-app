@@ -149,7 +149,6 @@ const EditProfile: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) => {
             <Typography variant="h6" color="primary" gutterBottom>
               Preferences
             </Typography>
-            {/* Add any additional preference settings here */}
           </Box>
         </DialogContent>
 

@@ -3,8 +3,8 @@ import { Grid } from "@mui/material";
 import Box from "@mui/material/Box";
 import { usePosts } from "../../hooks/usePost";
 import PostCard from "./PostCard";
-import { Loading } from "../../ui/Loading";
 import { Error } from "../../ui/Error";
+import PostSkeleton from "../../ui/PostSkeleton";
 import { useAuth } from "../../context/auth";
 import { PostListProps } from "../../types/postTypes";
 
@@ -12,7 +12,9 @@ const PostList: React.FC<PostListProps> = ({ filter = "all" }) => {
   const { data: posts, error, isLoading } = usePosts();
   const { user } = useAuth();
 
-  if (isLoading) return <Loading message="Loading posts..." />;
+  const skeletonCount = posts?.length || 6;
+
+  if (isLoading) return <PostSkeleton count={skeletonCount} />;
   if (error) return <Error message="Failed to load posts" />;
   if (!posts || posts.length === 0) return <Error message="No posts found" />;
 

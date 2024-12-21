@@ -5,6 +5,7 @@ import { userRoutes } from "./routes/userRoutes";
 import { postRoutes } from "./routes/postRoutes";
 import { categoryRoutes } from "./routes/categoryRoutes";
 import { healthCheckRoutes } from "./routes/healthCheckRoutes";
+import { errorHandler } from "./middlewares/errorHandler";
 dotenv.config();
 
 const app = express();
@@ -18,6 +19,8 @@ app.use("/api/posts", postRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/profile", userRoutes);
 app.use("/api/health", healthCheckRoutes);
+
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

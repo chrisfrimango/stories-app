@@ -36,7 +36,6 @@ export const TermsDialog: React.FC<FooterDialogProps> = ({ open, onClose }) => {
           not to post harmful or inappropriate content - You retain ownership of
           your content
         </Typography>
-        {/* Add more terms content as needed */}
       </StyledDialogContent>
       <DialogActions>
         <Button onClick={onClose}>Close</Button>

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PostFormData, postSchema } from "../../validation/schema";
+import { PostFormData, editPostSchema } from "../../validation/schema";
 import { EditPostModalProps } from "../../types/postsTypes";
 import { useAlert } from "../../context/alert";
 import { useEditPost, useCategories } from "../../hooks/usePost";
@@ -134,11 +134,11 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ isOpen, onClose }) => {
     formState: { errors },
     reset,
   } = useForm<PostFormData>({
-    resolver: zodResolver(postSchema),
+    resolver: zodResolver(editPostSchema),
     defaultValues: {
       title: "",
       content: "",
-      category: "",
+      category_id: "",
     },
   });
 
@@ -147,7 +147,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ isOpen, onClose }) => {
       reset({
         title: editingPost.title || "",
         content: editingPost.content || "",
-        category: editingPost.category_id?.toString() || "",
+        category_id: editingPost.category_id?.toString() || "",
       });
     }
   }, [editingPost, reset]);
@@ -191,7 +191,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ isOpen, onClose }) => {
           </FormGroup>
 
           <FormGroup>
-            <Select {...register("category")} data-testid="category-select">
+            <Select {...register("category_id")} data-testid="category-select">
               <option value="" disabled>
                 Select a category
               </option>
@@ -201,7 +201,9 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ isOpen, onClose }) => {
                 </option>
               ))}
             </Select>
-            {errors.category && <Error message={errors.category.message} />}
+            {errors.category_id && (
+              <Error message={errors.category_id.message} />
+            )}
           </FormGroup>
 
           <ButtonGroup>

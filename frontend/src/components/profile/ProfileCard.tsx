@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useProfile } from "../../hooks/useProfile";
 import {
   Container,
   Box,
@@ -11,23 +10,18 @@ import {
   Button,
 } from "@mui/material";
 import { useAuth } from "../../context/auth";
-import { Loading } from "../../ui/Loading";
-import { Error } from "../../ui/Error";
 import { useModal } from "../../context/modal";
 import { useAlert } from "../../context/alert";
 import { useDeleteProfile } from "../../hooks/useProfile";
+import { ProfileCardProps } from "../../types/userTypes";
 
-const ProfileCard: React.FC = () => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
   const { user: currentUser, logout } = useAuth();
 
   const navigate = useNavigate();
-  const { data: profile, isLoading, error } = useProfile(currentUser?.id || "");
   const { openEditProfileModal, openChangePasswordModal } = useModal();
   const { showAlert } = useAlert();
   const deleteProfile = useDeleteProfile(currentUser?.id || "");
-
-  if (isLoading) return <Loading data-testid="loading" />;
-  if (error) return <Error data-testid="error-message" />;
 
   const handleDeleteAccount = () => {
     if (window.confirm("Are you sure you want to delete your account?")) {

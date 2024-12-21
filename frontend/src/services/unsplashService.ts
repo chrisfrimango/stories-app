@@ -22,6 +22,6 @@ export async function getCategoryImage(category: string): Promise<string> {
     return data.urls.regular;
   } catch (error) {
     console.error("Error fetching image from Unsplash:", error);
-    return "https://placehold.co/400"; // Fallback image
+    return "https://placehold.co/400";
   }
 }

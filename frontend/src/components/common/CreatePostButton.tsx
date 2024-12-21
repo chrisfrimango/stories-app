@@ -13,9 +13,6 @@ const CreatePostButton: React.FC<CreatePostButtonProps> = ({
   variant = "button",
   sx = {},
 }) => {
-  // const theme = useTheme();
-  // const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-
   const buttonStyles = {
     textTransform: "none",
     fontWeight: 400,

@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 import { query } from "../utils/db";
 import { CategoryResponse, ErrorResponse } from "../types/responses";
+import { asyncHandler } from "../utils/asyncHandler";
+import { createNotFoundError, createDatabaseError } from "../utils/errors";
 
-export const getAllCategories = async (
-  req: Request,
-  res: Response<{ categories: CategoryResponse[] } | ErrorResponse>
-): Promise<void> => {
-  try {
-    console.log("getAllCategories");
+export const getAllCategories = asyncHandler(
+  async (
+    req: Request,
+    res: Response<{ categories: CategoryResponse[] } | ErrorResponse>
+  ) => {
     const result = await query<CategoryResponse>({
       text: `
       SELECT *
@@ -16,16 +17,14 @@ export const getAllCategories = async (
     });
 
     res.json({ categories: result.rows });
-  } catch (error) {
-    res.status(500).json({ message: "Failed to fetch categories" });
   }
-};
+);
 
-export const getCategoryById = async (
-  req: Request,
-  res: Response<{ category: CategoryResponse } | ErrorResponse>
-): Promise<void> => {
-  try {
+export const getCategoryById = asyncHandler(
+  async (
+    req: Request,
+    res: Response<{ category: CategoryResponse } | ErrorResponse>
+  ) => {
     const { id } = req.params;
     const result = await query<CategoryResponse>({
       text: `SELECT * FROM categories WHERE id = $1`,
@@ -33,22 +32,18 @@ export const getCategoryById = async (
     });
 
     if (!result.rows[0]) {
-      res.status(404).json({ message: "Category not found" });
-      return;
+      throw createNotFoundError("Category not found");
     }
 
     res.json({ category: result.rows[0] });
-  } catch (error) {
-    res.status(500).json({ message: "Failed to fetch category" });
   }
-};
+);
 
-export const createCategory = async (
-  req: Request,
-  res: Response<{ category: CategoryResponse } | ErrorResponse>
-): Promise<void> => {
-  try {
-    console.log("createCategory");
+export const createCategory = asyncHandler(
+  async (
+    req: Request,
+    res: Response<{ category: CategoryResponse } | ErrorResponse>
+  ) => {
     const { name } = req.body;
 
     const result = await query<CategoryResponse>({
@@ -58,17 +53,16 @@ export const createCategory = async (
       params: [name],
     });
 
-    res.status(201).json({ category: result.rows[0] });
-  } catch (error) {
-    res.status(500).json({ message: "Failed to create category" });
-  }
-};
+    if (!result.rows[0]) {
+      throw createDatabaseError("Failed to create category");
+    }
 
-export const deleteCategory = async (
-  req: Request,
-  res: Response<{ message: string } | ErrorResponse>
-): Promise<void> => {
-  try {
+    res.status(201).json({ category: result.rows[0] });
+  }
+);
+
+export const deleteCategory = asyncHandler(
+  async (req: Request, res: Response<{ message: string } | ErrorResponse>) => {
     const { id } = req.params;
 
     const result = await query({
@@ -79,12 +73,9 @@ export const deleteCategory = async (
     });
 
     if (!result.rows[0]) {
-      res.status(404).json({ message: "Category not found" });
-      return;
+      throw createNotFoundError("Category not found");
     }
 
     res.json({ message: "Category deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "Failed to delete category" });
   }
-};
+);

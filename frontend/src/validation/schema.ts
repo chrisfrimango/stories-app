@@ -35,7 +35,14 @@ export const profileSchema = z.object({
 export const postSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
   content: z.string().min(10, "Content must be at least 10 characters"),
-  category: z.string().min(1, "Category is required"),
+  category: z.string(),
+  category_id: z.string().optional(),
+});
+
+export const editPostSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters"),
+  content: z.string().min(10, "Content must be at least 10 characters"),
+  category_id: z.string(),
 });
 
 export const passwordSchema = z
@@ -64,5 +71,10 @@ export type PasswordInput = z.infer<typeof passwordSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type ProfileInput = z.infer<typeof profileSchema>;
-export type PostFormData = z.infer<typeof postSchema>;
+export type PostFormData = {
+  title: string;
+  content: string;
+  category?: string;
+  category_id?: string;
+};
 export type ContactFormData = z.infer<typeof contactSchema>;

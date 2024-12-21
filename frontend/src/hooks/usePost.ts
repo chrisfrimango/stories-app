@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAlert } from "../context/alert";
 import { useNavigate } from "react-router-dom";
 import { postApi } from "../services/postApi";
-import { profileApi } from "../services/profileApi";
 import type { PostFormData } from "../validation/schema";
 import type { UseHandlePostDeleteOptions } from "../types/postsTypes";
 
@@ -51,12 +50,17 @@ export function useEditPost(id: string) {
   const { showAlert } = useAlert();
 
   return useMutation({
-    mutationFn: (data: PostFormData) => postApi.updateById(id, data),
+    mutationFn: (data: PostFormData) => {
+      return postApi.updateById(id, {
+        title: data.title,
+        content: data.content,
+        category_id: data.category_id,
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["post", id] });
       showAlert("Post updated successfully", "success");
-      return "Post updated successfully";
     },
     onError: (error) => {
       console.error("Error updating post:", error);
@@ -99,12 +103,4 @@ export function useDeletePost({
     },
     isDeleting: mutation.isLoading,
   };
-}
-
-// Move profile hook to separate file
-export function useProfile(id: string) {
-  return useQuery({
-    queryKey: ["profile", id],
-    queryFn: () => profileApi.fetchProfile(id),
-  });
 }

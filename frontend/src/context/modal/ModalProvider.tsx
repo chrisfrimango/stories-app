@@ -2,18 +2,7 @@ import React, { useState } from "react";
 import { ModalContext } from "./context";
 import { UserProfile } from "../../types/userTypes";
 import { Post } from "../../types/postsTypes";
-
-interface ModalProviderProps {
-  children: React.ReactNode;
-  initialState?: {
-    editingPost?: Post | null;
-    editingProfile?: UserProfile | null;
-    isCreatePostModalOpen?: boolean;
-    isEditPostModalOpen?: boolean;
-    isEditProfileModalOpen?: boolean;
-    isChangePasswordModalOpen?: boolean;
-  };
-}
+import { ModalProviderProps } from "../../types/modalTypes";
 
 export const ModalProvider: React.FC<ModalProviderProps> = ({
   children,

@@ -1,5 +1,13 @@
 # CHANGELOG
 
+### 2024-03-21 feat: Validation middleware and error handling improvements
+
+- **Description**:
+  - Implements Zod validation middleware and centralized error handling system
+  - Improves database error handling and connection management
+  - Updates controllers with validation and adds loading skeletons for UX
+  - Adds new utilities: errorHandler, validateRequest, asyncHandler, responseHandler
+
 ### 2024-12-19 docs: update README and test structure
 
 - **Description**:

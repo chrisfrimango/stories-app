@@ -1,65 +1,84 @@
-import React from "react";
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Typography,
-  Card,
-  CardContent,
-  Stack,
-} from "@mui/material";
+import React, { useRef, useEffect } from "react";
+import gsap from "gsap";
+import { Box, Button, Container, Typography, Stack } from "@mui/material";
 import { Link } from "react-router-dom";
-import AdaptiveIcon from "@mui/icons-material/AutoFixHigh";
-import DurableIcon from "@mui/icons-material/Security";
-import UXIcon from "@mui/icons-material/ThumbUp";
-import InnovativeIcon from "@mui/icons-material/Lightbulb";
-import ReliableIcon from "@mui/icons-material/Support";
-import PrecisionIcon from "@mui/icons-material/PrecisionManufacturing";
+// import AdaptiveIcon from "@mui/icons-material/AutoFixHigh";
+// import DurableIcon from "@mui/icons-material/Security";
+// import UXIcon from "@mui/icons-material/ThumbUp";
+// import InnovativeIcon from "@mui/icons-material/Lightbulb";
+// import ReliableIcon from "@mui/icons-material/Support";
+// import PrecisionIcon from "@mui/icons-material/PrecisionManufacturing";
 
-const features = [
-  {
-    title: "Adaptable performance",
-    description:
-      "Our platform effortlessly adjusts to your needs, boosting efficiency and simplifying your writing tasks.",
-    icon: <AdaptiveIcon fontSize="large" />,
-  },
-  {
-    title: "Built to last",
-    description:
-      "Experience unmatched reliability that goes above and beyond with lasting value.",
-    icon: <DurableIcon fontSize="large" />,
-  },
-  {
-    title: "Great user experience",
-    description:
-      "Integrate our platform into your routine with an intuitive and easy-to-use interface.",
-    icon: <UXIcon fontSize="large" />,
-  },
-  {
-    title: "Innovative functionality",
-    description:
-      "Stay ahead with features that set new standards, addressing your evolving needs better than the rest.",
-    icon: <InnovativeIcon fontSize="large" />,
-  },
-  {
-    title: "Reliable support",
-    description:
-      "Count on our responsive community support, offering assistance that goes beyond expectations.",
-    icon: <ReliableIcon fontSize="large" />,
-  },
-  {
-    title: "Precision in every detail",
-    description:
-      "Enjoy a meticulously crafted platform where small touches make a significant impact on your writing experience.",
-    icon: <PrecisionIcon fontSize="large" />,
-  },
-];
+// const features = [
+//   {
+//     title: "Adaptable performance",
+//     description:
+//       "Our platform effortlessly adjusts to your needs, boosting efficiency and simplifying your writing tasks.",
+//     icon: <AdaptiveIcon fontSize="large" />,
+//   },
+//   {
+//     title: "Built to last",
+//     description:
+//       "Experience unmatched reliability that goes above and beyond with lasting value.",
+//     icon: <DurableIcon fontSize="large" />,
+//   },
+//   {
+//     title: "Great user experience",
+//     description:
+//       "Integrate our platform into your routine with an intuitive and easy-to-use interface.",
+//     icon: <UXIcon fontSize="large" />,
+//   },
+//   {
+//     title: "Innovative functionality",
+//     description:
+//       "Stay ahead with features that set new standards, addressing your evolving needs better than the rest.",
+//     icon: <InnovativeIcon fontSize="large" />,
+//   },
+//   {
+//     title: "Reliable support",
+//     description:
+//       "Count on our responsive community support, offering assistance that goes beyond expectations.",
+//     icon: <ReliableIcon fontSize="large" />,
+//   },
+//   {
+//     title: "Precision in every detail",
+//     description:
+//       "Enjoy a meticulously crafted platform where small touches make a significant impact on your writing experience.",
+//     icon: <PrecisionIcon fontSize="large" />,
+//   },
+// ];
 
 const Home: React.FC = () => {
+  const titleRef = useRef(null);
+  const subtitleRef = useRef(null);
+
+  useEffect(() => {
+    // Clear any existing animations first
+    gsap.context(() => {
+      const tl = gsap.timeline();
+
+      tl.fromTo(
+        [titleRef.current, subtitleRef.current],
+        {
+          opacity: 0,
+          y: 50,
+          scale: 0.9,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1,
+          ease: "power3.out",
+          stagger: 0.2,
+          clearProps: "all", // Important! This ensures CSS props are cleaned up after animation
+        }
+      );
+    });
+  }, []); // Empty dependency array ensures it only runs once
+
   return (
     <Box>
-      {/* Hero Section */}
       <Box
         sx={{
           bgcolor: "background.paper",
@@ -70,6 +89,7 @@ const Home: React.FC = () => {
       >
         <Container maxWidth="sm">
           <Typography
+            ref={titleRef}
             component="h1"
             variant="h2"
             color="text.primary"
@@ -78,7 +98,7 @@ const Home: React.FC = () => {
           >
             Stories about everything
           </Typography>
-          <Typography variant="h5" color="text.secondary" paragraph>
+          <Typography ref={subtitleRef} variant="h5" color="text.secondary">
             Simple, powerful, and built for you. Share your stories with the
             world.
           </Typography>
@@ -106,8 +126,7 @@ const Home: React.FC = () => {
         </Container>
       </Box>
 
-      {/* Features Section */}
-      <Container sx={{ py: 8 }} maxWidth="lg">
+      {/* <Container sx={{ py: 8 }} maxWidth="lg">
         <Typography
           component="h2"
           variant="h3"
@@ -153,7 +172,7 @@ const Home: React.FC = () => {
             </Grid>
           ))}
         </Grid>
-      </Container>
+      </Container> */}
     </Box>
   );
 };

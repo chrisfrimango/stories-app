@@ -11,3 +11,7 @@ export interface EditProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+export interface ProfileCardProps {
+  profile: UserProfile;
+}

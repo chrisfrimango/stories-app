@@ -1,6 +1,7 @@
 import { Pool, QueryResult, QueryResultRow } from "pg";
 import dotenv from "dotenv";
 import { DatabaseConfig, QueryParams } from "../types/database";
+import { createDatabaseError } from "./errors";
 
 dotenv.config();
 
@@ -40,23 +41,22 @@ export const query = async <T extends QueryResultRow = QueryResultRow>({
     await client.query("SET search_path TO blog");
     const res = await client.query(text, params);
     return res;
+  } catch (error) {
+    throw createDatabaseError(
+      `Database query failed: ${(error as Error).message}`
+    );
   } finally {
     client.release();
   }
 };
 
-// Error handling
 pool.on("error", (err) => {
-  console.error("Unexpected error on idle client", err);
-  process.exit(-1);
+  console.error("Database pool error:", err);
+  pool.emit("connection_error", createDatabaseError(err.message));
 });
 
 pool.on("connect", () => {
   console.log("Database connected successfully");
-});
-
-pool.on("error", (err) => {
-  console.error("Database connection error:", err);
 });
 
 export default {

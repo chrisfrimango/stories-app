@@ -25,7 +25,8 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({
           sx={{
             position: "fixed",
             top: 30,
-            left: 20,
+            left: "50%",
+            transform: "translateX(-50%)",
             zIndex: 2000,
             minWidth: "300px",
             transition: "all 0.5s ease-in-out",
