@@ -97,7 +97,25 @@ Test data is organized under `cypress/fixtures/testData/`:
 
 ## Installation & Setup
 
-1. Clone the repository:
+## Database Setup
+
+1. Install PostgreSQL if not already installed
+2. Create a new database:
+   bash
+   psql -U postgres
+   CREATE DATABASE your_db_name;
+
+3. Run migrations (from backend directory):
+   bash
+   npm run migrate
+
+4. Optional copy sql code from the schema and set it up manual
+
+The database schema will be automatically created when you run the migrations. Make sure your PostgreSQL server is running and the credentials in your `.env` file match your local PostgreSQL setup.
+
+## Frontend/backend Setup
+
+4. Clone the repository:
 
 ```bash
 git clone [repo-url]
