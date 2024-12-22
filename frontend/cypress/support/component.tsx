@@ -34,13 +34,16 @@ import { theme as styledTheme } from "../../src/styles/theme";
 import { muiTheme } from "../../src/styles/muiTheme";
 import React from "react";
 
-// Ensure window check happens before any component code
 if (typeof window === "undefined") {
   throw new Error("Component tests must run in a browser environment");
 }
 
 interface TestWrapperProps {
   children: React.ReactNode;
+}
+
+interface WindowWithModalState extends Window {
+  initialModalState?: unknown;
 }
 
 export function TestWrapper({ children }: TestWrapperProps) {
@@ -53,8 +56,7 @@ export function TestWrapper({ children }: TestWrapperProps) {
     },
   });
 
-  // Get the initial state from window
-  const modalState = (window as any).initialModalState;
+  const modalState = (window as WindowWithModalState).initialModalState;
 
   return (
     <BrowserRouter>
@@ -76,22 +78,18 @@ export function TestWrapper({ children }: TestWrapperProps) {
   );
 }
 
-// Mount command
 Cypress.Commands.add("mount", (component: React.ReactNode) => {
   const wrapped = <TestWrapper>{component}</TestWrapper>;
   return mount(wrapped);
 });
 
-// Global error handler
 Cypress.on("uncaught:exception", (err) => {
   if (err.message.includes("Cannot read properties of null")) {
     return false;
   }
-  // Let other errors fail tests
   return true;
 });
 
-// Type definitions
 declare global {
   namespace Cypress {
     interface Chainable {

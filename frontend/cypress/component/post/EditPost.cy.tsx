@@ -23,7 +23,7 @@ describe("EditPost Component", () => {
           email: "test@example.com",
         })
       );
-      // Set the editingPost in the modal context through window
+
       win.initialModalState = {
         editingPost: mockPost,
       };
@@ -33,7 +33,6 @@ describe("EditPost Component", () => {
   beforeEach(() => {
     setupMockAuth();
 
-    // Mock categories API call
     cy.intercept("GET", "**/api/categories", {
       statusCode: 200,
       body: {
@@ -51,7 +50,6 @@ describe("EditPost Component", () => {
     cy.mount(<EditPost isOpen={true} onClose={() => {}} />);
     cy.wait("@getCategories");
 
-    // Verify pre-filled data
     cy.get('[data-testid="post-title-input"]')
       .should("be.visible")
       .and("have.value", "Test Post 1");
@@ -64,7 +62,6 @@ describe("EditPost Component", () => {
   });
 
   it("handles successful post update", () => {
-    // Mock successful update
     cy.intercept("PUT", "**/api/posts/*", {
       statusCode: 200,
       body: {
@@ -84,38 +81,30 @@ describe("EditPost Component", () => {
     cy.mount(<EditPost isOpen={true} onClose={onCloseSpy} />);
     cy.wait("@getCategories");
 
-    // Update form fields
     cy.get('[data-testid="post-title-input"]').clear().type("Updated Post");
     cy.get('[data-testid="post-content-input"]')
       .clear()
       .type("Updated content");
     cy.get('[data-testid="category-select"]').select("2");
 
-    // Submit form
     cy.get('[data-testid="edit-post-submit"]').click();
     cy.wait("@updatePost");
 
-    // Verify success and modal close
     cy.get('[data-testid="alert"]')
       .should("be.visible")
       .and("contain", "Post edited successfully");
     cy.get("@onCloseSpy").should("have.been.called");
-
-    // check the new post is in the database
   });
 
   it("validates required fields", () => {
     cy.mount(<EditPost isOpen={true} onClose={() => {}} />);
     cy.wait("@getCategories");
 
-    // Clear required fields
     cy.get('[data-testid="post-title-input"]').clear();
     cy.get('[data-testid="post-content-input"]').clear();
 
-    // Try to submit
     cy.get('[data-testid="edit-post-submit"]').click();
 
-    // Check validation messages
     cy.get('[data-testid="error-message"]').should(
       "contain",
       "Title must be at least 3 characters"
@@ -127,7 +116,6 @@ describe("EditPost Component", () => {
   });
 
   it("handles API errors", () => {
-    // Mock failed update
     cy.intercept("PUT", "**/api/posts/*", {
       statusCode: 400,
       body: { message: "Failed to update post" },

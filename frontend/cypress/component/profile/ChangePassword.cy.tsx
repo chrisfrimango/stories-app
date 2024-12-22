@@ -89,7 +89,6 @@ describe("ChangePassword Modal", () => {
 
     cy.get("@onCloseSpy").should("have.been.called");
 
-    // Re-open to verify inputs are cleared
     cy.mount(<ChangePassword isOpen={true} onClose={onCloseSpy} />);
     cy.get('[data-testid="current-password-input"]').should("have.value", "");
     cy.get('[data-testid="new-password-input"]').should("have.value", "");

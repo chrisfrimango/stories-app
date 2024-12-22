@@ -19,7 +19,6 @@ Given("I am logged in as {string}", (username: string) => {
 });
 
 Given("I am on my profile page", () => {
-  // Mock initial profile data
   cy.intercept("GET", "**/api/profile/*", {
     statusCode: 200,
     body: {
@@ -30,7 +29,6 @@ Given("I am on my profile page", () => {
     },
   }).as("getProfile");
 
-  // Ensure user is properly authenticated with matching ID
   cy.window().then((win) => {
     win.localStorage.setItem(
       "user_data",
@@ -45,7 +43,6 @@ Given("I am on my profile page", () => {
   cy.visit("/profile");
   cy.wait("@getProfile");
 
-  // Verify profile page is loaded
   cy.get('[data-testid="profile-card"]').should("be.visible");
 });
 
@@ -79,7 +76,6 @@ When("I update the following information:", (dataTable: DataTable) => {
     },
   }).as("updateProfile");
 
-  // Fill in the form fields
   if (formData.username) {
     cy.get('[data-testid="edit-profile-name"]')
       .should("be.visible")
@@ -97,7 +93,6 @@ When("I update the following information:", (dataTable: DataTable) => {
 When("I click {string}", (buttonText: string) => {
   switch (buttonText.toLowerCase()) {
     case "save changes":
-      // Mock the GET request that will happen after update
       cy.intercept("GET", "**/api/profile/*", {
         statusCode: 200,
         body: {
@@ -134,14 +129,12 @@ Then("I should see a success message", () => {
     .and("contain", "Profile updated successfully");
 });
 
-// Add delete profile scenarios
+
 When("I click on the delete account button", () => {
-  // Setup delete intercept
   cy.intercept("DELETE", "**/api/profile/*", {
     statusCode: 204,
   }).as("deleteProfile");
 
-  // Stub window.confirm before clicking
   cy.window().then((win) => {
     cy.stub(win, "confirm").as("confirmStub").returns(true);
   });
@@ -150,16 +143,9 @@ When("I click on the delete account button", () => {
 });
 
 Then("my account should be deleted", () => {
-  // Verify confirm was called
   cy.get("@confirmStub").should("have.been.calledOnce");
-
-  // Wait for delete request
   cy.wait("@deleteProfile");
-
-  // Verify redirect to home page
   cy.url().should("include", "/");
-
-  // Verify success message
   cy.get('[data-testid="alert"]')
     .should("be.visible")
     .and("contain", "Account deleted successfully");

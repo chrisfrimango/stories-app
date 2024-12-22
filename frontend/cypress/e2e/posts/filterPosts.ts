@@ -12,7 +12,6 @@ Given("I am logged in as {string}", (username: string) => {
 });
 
 Given("I have the following posts:", (dataTable: DataTable) => {
-  // Mock API response for posts
   cy.intercept("GET", "**/api/posts", {
     statusCode: 200,
     body: {
@@ -34,12 +33,7 @@ Given("I have the following posts:", (dataTable: DataTable) => {
 });
 
 When("I click the {string} filter button", (filterType: string) => {
-  // Wait for initial posts to load
-
-  // Click the filter button
   cy.get(`[data-testid="filter-${filterType}"]`).click();
-
-  // Wait for filtered posts to be visible
   cy.get('[data-testid="post-card"]').should("exist");
 });
 

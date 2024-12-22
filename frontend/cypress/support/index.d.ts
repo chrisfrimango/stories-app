@@ -9,13 +9,13 @@ declare global {
         editingPost?: Post;
       };
     }
-  }
-
-  interface AUTWindow {
-    initialModalState?: {
-      editingPost?: Post;
-      editingProfile?: UserProfile;
-    };
+    interface AUTWindow extends Window {
+      initialModalState: {
+        editingPost?: Post;
+        editingProfile?: UserProfile;
+      };
+      localStorage: Storage;
+    }
   }
 }
 

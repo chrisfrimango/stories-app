@@ -18,11 +18,9 @@ describe("PostDetail Component", () => {
 
   beforeEach(() => {
     setupMockAuth();
-
-    // Mock post fetch
     cy.intercept("GET", "**/api/posts/*", {
       statusCode: 200,
-      fixture: "post.json",
+      fixture: "testData/post.json",
     }).as("getPost");
   });
 
@@ -51,7 +49,7 @@ describe("PostDetail Component", () => {
     cy.intercept("GET", "**/api/posts/*", {
       delay: 1000,
       statusCode: 200,
-      fixture: "post.json",
+      fixture: "testData/post.json",
     }).as("getPostDelayed");
 
     cy.mount(<PostDetail />);
@@ -75,7 +73,6 @@ describe("PostDetail Component", () => {
   });
 
   it("handles post deletion", () => {
-    // Mock delete API call
     cy.intercept("DELETE", "**/api/posts/*", {
       statusCode: 204,
     }).as("deletePost");
@@ -83,7 +80,6 @@ describe("PostDetail Component", () => {
     cy.mount(<PostDetail />);
     cy.wait("@getPost");
 
-    // Stub window.confirm to return true
     cy.window().then((win) => {
       cy.stub(win, "confirm").returns(true);
     });
@@ -91,7 +87,6 @@ describe("PostDetail Component", () => {
     cy.get('[data-testid="delete-button"]').click();
     cy.wait("@deletePost");
 
-    // Verify success message
     cy.get('[data-testid="alert"]')
       .should("be.visible")
       .and("contain", "Post deleted successfully");

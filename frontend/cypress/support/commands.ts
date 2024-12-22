@@ -22,7 +22,6 @@ declare global {
   }
 }
 
-// Authentication command
 Cypress.Commands.add("login", (email: string, password: string) => {
   cy.intercept("POST", "/api/users/login", {
     statusCode: 200,
@@ -42,12 +41,11 @@ Cypress.Commands.add("login", (email: string, password: string) => {
 Cypress.Commands.add("loginViaUI", (email: string, password: string) => {
   cy.visit("/login");
 
-  // Add waiting for the page to load
   cy.get('[data-testid="email-input"]', { timeout: 10000 }).should(
     "be.visible"
   );
 
-  cy.fixture("users.json").then((userData) => {
+  cy.fixture("testData/auth.json").then((userData) => {
     cy.intercept("POST", `${Cypress.env("API_URL")}/users/login`, {
       statusCode: 200,
       body: userData.mockLoginResponse,
@@ -65,7 +63,6 @@ Cypress.Commands.add("loginViaUI", (email: string, password: string) => {
   cy.url().should("include", "/blog");
 });
 
-// Mock auth state command
 Cypress.Commands.add("mockAuthState", (user = null) => {
   const defaultUser = {
     id: 1,
@@ -81,7 +78,6 @@ Cypress.Commands.add("mockAuthState", (user = null) => {
 
 Cypress.Commands.add("setupMockProfile", () => {
   cy.fixture("testData/profile.json").then((profileData) => {
-    // Mock auth context
     cy.window().then((win) => {
       win.localStorage.setItem("auth_token", "fake-token");
       win.localStorage.setItem(
@@ -94,7 +90,6 @@ Cypress.Commands.add("setupMockProfile", () => {
       );
     });
 
-    // Mock profile API call
     cy.intercept("GET", "**/api/profile/*", {
       statusCode: 200,
       body: profileData,
@@ -103,7 +98,7 @@ Cypress.Commands.add("setupMockProfile", () => {
 });
 
 Cypress.Commands.add("editMockProfile", () => {
-  cy.fixture("editProfile.json").then((profileData) => {
+  cy.fixture("testData/profile.json").then((profileData) => {
     cy.window().then((win) => {
       win.localStorage.setItem("auth_token", "fake-token");
       win.localStorage.setItem(
@@ -145,7 +140,6 @@ Cypress.Commands.add("mockAuthUser", () => {
 
 Cypress.Commands.add("setupDeleteProfile", () => {
   cy.fixture("testData/profile.json").then((profileData) => {
-    // Setup mock auth state
     cy.window().then((win) => {
       win.localStorage.setItem("auth_token", "fake-token");
       win.localStorage.setItem(
@@ -158,13 +152,11 @@ Cypress.Commands.add("setupDeleteProfile", () => {
       );
     });
 
-    // Mock profile API call
     cy.intercept("GET", "**/api/profile/*", {
       statusCode: 200,
       body: profileData,
     }).as("getProfile");
 
-    // Mock delete profile API call
     cy.intercept("DELETE", "**/api/profile/*", {
       statusCode: 204,
       body: { message: "Profile deleted successfully" },

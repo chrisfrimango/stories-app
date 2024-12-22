@@ -7,15 +7,10 @@ describe("Login Component", () => {
   });
 
   it("validates email format", () => {
-    // Submit form without typing to trigger validation
     cy.get('[data-testid="login-button"]').click();
-
-    // Check for email validation error
     cy.get('[data-testid="email-error"]')
       .should("be.visible")
       .and("contain", "Invalid email address");
-
-    // Type invalid email and check error
     cy.get('[data-testid="email-input"]').type("invalid-email");
     cy.get('[data-testid="login-button"]').click();
 
@@ -35,7 +30,7 @@ describe("Login Component", () => {
   });
 
   it("handles successful login", () => {
-    cy.fixture("users.json").then((userData) => {
+    cy.fixture("testData/auth.json").then((userData) => {
       cy.intercept("POST", `${Cypress.env("API_URL")}/users/login`, {
         statusCode: 200,
         body: userData.mockLoginResponse,

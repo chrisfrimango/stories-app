@@ -70,7 +70,6 @@ describe("useProfile Hook", () => {
       email: "updated@test.com",
     };
 
-    // Mock both GET and PUT requests
     cy.intercept("PUT", "**/api/profile/1", {
       statusCode: 200,
       body: updatedProfile,
