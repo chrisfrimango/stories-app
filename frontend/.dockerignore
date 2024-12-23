@@ -1,0 +1,12 @@
+node_modules
+dist
+coverage
+.nyc_output
+*.log
+.env
+.env.*
+.git
+.gitignore
+README.md
+cypress
+cypress.config.ts

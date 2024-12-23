@@ -26,6 +26,13 @@ tsconfig.*.tsbuildinfo
 *.sw?
 
 .env
+- backend/.env
+- frontend/.env
+
+# Keep examples
+!.env.example
+- !backend/.env.example
+- !frontend/.env.example
 
 # Coverage directory
 /frontend/coverage/
